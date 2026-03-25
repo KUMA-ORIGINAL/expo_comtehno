@@ -166,14 +166,14 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-if not DEBUG:
-    sentry_sdk.init(
-        dsn=env('SENTRY_DSN'),
-        integrations=[DjangoIntegration()],
-        traces_sample_rate=0.5,  # Для мониторинга производительности. Можно уменьшить
-        send_default_pii=True,
-        environment="production",
-    )
+# if not DEBUG:
+#     sentry_sdk.init(
+#         dsn=env('SENTRY_DSN'),
+#         integrations=[DjangoIntegration()],
+#         traces_sample_rate=0.5,  # Для мониторинга производительности. Можно уменьшить
+#         send_default_pii=True,
+#         environment="production",
+#     )
 
 PHONENUMBER_DEFAULT_REGION = 'KG'
 
