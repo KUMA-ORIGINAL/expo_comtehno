@@ -1,0 +1,284 @@
+# English translations for exhibition site
+# Copyright (C) 2026
+# This file is distributed under the same license as the project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-19 12:00+0000\n"
+"PO-Revision-Date: 2026-03-19 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Главная"
+msgstr "Home"
+
+msgid "Регистрация"
+msgstr "Registration"
+
+msgid "Участникам"
+msgstr "For exhibitors"
+
+msgid "Забронировать стенд"
+msgstr "Book a stand"
+
+msgid "Варианты стендов"
+msgstr "Stand options"
+
+msgid "Список участников"
+msgstr "Exhibitor list"
+
+msgid "Каталог"
+msgstr "Catalog"
+
+msgid "Посетителям"
+msgstr "For visitors"
+
+msgid "Получить билет на выставку"
+msgstr "Get exhibition ticket"
+
+msgid "Время и место проведения"
+msgstr "Time and venue"
+
+msgid "Партнерам"
+msgstr "For partners"
+
+msgid "Подать заявку на партнёрство"
+msgstr "Apply for partnership"
+
+msgid "Партнёрские возможности"
+msgstr "Partnership opportunities"
+
+msgid "Контакты"
+msgstr "Contacts"
+
+msgid "Все права защищены"
+msgstr "All rights reserved"
+
+msgid "Регистрация на выставку"
+msgstr "Exhibition registration"
+
+msgid "Заполните регистрационную форму. Поля, помеченные звездочкой"
+msgstr "Fill in the registration form. Fields marked with an asterisk"
+
+msgid "обязательны для заполнения"
+msgstr "are required"
+
+msgid "Зарегистрироваться"
+msgstr "Register"
+
+msgid "На главную"
+msgstr "Home"
+
+msgid "Регистрация успешна"
+msgstr "Registration successful"
+
+msgid "Регистрация успешно завершена"
+msgstr "Registration completed successfully"
+
+msgid "Спасибо за регистрацию на выставку ICEE. Мы ждём Вас 14–16 апреля 2026 в Манеже КГАФКиС!"
+msgstr "Thank you for registering for the ICEE exhibition. We look forward to seeing you on April 14–16, 2026 at Maneg KGAFKiS!"
+
+msgid "Бейдж можно получить на стойке регистрации по предъявлении электронного билета."
+msgstr "You can get your badge at the registration desk upon presentation of your e-ticket."
+
+msgid "Зарегистрировать ещё одного посетителя"
+msgstr "Register another visitor"
+
+msgid "Международная специализированная выставка"
+msgstr "International specialized exhibition"
+
+msgid "Регистрация участников и посетителей"
+msgstr "Registration of exhibitors and visitors"
+
+msgid "международной специализированной выставки"
+msgstr "of the international specialized exhibition"
+
+msgid "Для посещения мероприятия, пожалуйста, зарегистрируйтесь."
+msgstr "To attend the event, please register."
+
+msgid "Введите адрес Вашей электронной почты:"
+msgstr "Enter your email address:"
+
+msgid "Ваш email"
+msgstr "Your email"
+
+msgid "Продолжить"
+msgstr "Continue"
+
+msgid "У меня нет личного email, я хочу"
+msgstr "I don't have a personal email, I want to"
+
+msgid "связаться с организаторами"
+msgstr "contact the organizers"
+
+msgid "На указанный email после регистрации придёт письмо с билетом."
+msgstr "A ticket will be sent to this email after registration."
+
+msgid "Изменить email"
+msgstr "Change email"
+
+msgid "На этот email уже зарегистрировались. Используйте другой адрес или свяжитесь с организаторами."
+msgstr "This email is already registered. Use a different address or contact the organizers."
+
+msgid "возможно несколько вариантов ответа"
+msgstr "multiple answers possible"
+
+msgid "Удерживайте Ctrl (Cmd на Mac) для выбора нескольких вариантов"
+msgstr "Hold Ctrl (Cmd on Mac) to select multiple options"
+
+msgid "Приобрести продукцию/услуги"
+msgstr "Purchase products/services"
+
+msgid "Получить информацию о продукции"
+msgstr "Get product information"
+
+msgid "Найти новых поставщиков"
+msgstr "Find new suppliers"
+
+msgid "Поддержать существующие деловые контакты"
+msgstr "Maintain existing business contacts"
+
+msgid "Посетить семинар/конференцию/мастер-класс"
+msgstr "Attend seminar/conference/masterclass"
+
+msgid "Пообщаться с коллегами"
+msgstr "Network with colleagues"
+
+msgid "Мы рады вашему интересу к международной выставке ICEE. Сегодня выставка представляет собой уникальную площадку для делового сотрудничества и изучения современных инноваций и новых технологий. Ведь выставки способны перенести человека в другой мир, собрав под одной крышей всё лучшее, что есть в отрасли или в личных интересах."
+msgstr "We are glad for your interest in the international ICEE exhibition. Today, the exhibition is a unique platform for business cooperation and for exploring modern innovations and new technologies. Exhibitions can transport people into another world by bringing together the best of the industry in one place."
+
+msgid "Регистрация ОБЯЗАТЕЛЬНА для всех посетителей."
+msgstr "Registration is MANDATORY for all visitors."
+
+msgid "Вход на выставку предоставляется БЕСПЛАТНО! Основанием для входа является именной бейдж. Бейдж выдается на стойке регистрации в фойе и действителен в течение всего периода работы выставки. Выставка работает с 10:00 до 18:00 первые два дня, третий день с 10:00 до 16:00. Вход посетителей прекращается за 30 минут до закрытия."
+msgstr "Entrance to the exhibition is FREE! Entry is granted with a personal badge. Badges are issued at the registration desk in the foyer and are valid throughout the exhibition period. The exhibition is open 10:00–18:00 on the first two days and 10:00–16:00 on the third day. Visitor entry ends 30 minutes before closing."
+
+msgid "Бейдж можно получить по предъявлении распечатанного или электронного билета после онлайн-регистрации на официальном сайте, а также пройти регистрацию в фойе в день посещения."
+msgstr "You can receive a badge by presenting a printed or electronic ticket after online registration on the official website, or by registering in the foyer on the day of your visit."
+
+msgid "Вход на конференции и семинары осуществляется по бейджам посетителя БЕСПЛАТНО!"
+msgstr "Access to conferences and seminars is FREE with a visitor badge!"
+
+msgid "Студенты профильных ВУЗов допускаются в третий день выставки только в сопровождении преподавателя, согласно списку (официально заверенному администрацией ВУЗа). Список должен быть согласован с организатором. ВУЗ может обратиться: +996 770 090 919 (WA) Арина Алейникова."
+msgstr "Students of профиль universities are admitted on the third day only when accompanied by a teacher, according to a list officially certified by the university administration. The list must be approved by the organizer. University contact: +996 770 090 919 (WA), Arina Aleynikova."
+
+msgid "Посещение лицами до 18 лет возможно только при сопровождении совершеннолетних (родителей)."
+msgstr "Visitors under 18 are allowed only when accompanied by adults (parents)."
+
+msgid "Передача бейджей третьим лицам запрещена. Организатор вправе проверить соответствие данных в бейдже документу, удостоверяющему личность."
+msgstr "Transfer of badges to third parties is prohibited. The organizer may verify that badge details match an identity document."
+
+msgid "На территории выставки запрещены торговля, распространение рекламной продукции, презентации и агитация без письменного согласия организатора."
+msgstr "Trading, distribution of promotional materials, presentations, and solicitation on the exhibition grounds are prohibited without written consent from the organizer."
+
+msgid "Организатор не несёт ответственности за утерю личных вещей."
+msgstr "The organizer is not responsible for lost personal belongings."
+
+msgid "При утрате бейджа обратитесь на стойку регистрации для его восстановления."
+msgstr "If your badge is lost, contact the registration desk to restore it."
+
+msgid "Приятного посещения выставки!"
+msgstr "Enjoy your visit to the exhibition!"
+
+msgid "ICEE-000123 или https://.../ticket/..."
+msgstr "ICEE-000123 or https://.../ticket/..."
+
+msgid "Электронный билет участника выставки"
+msgstr "Exhibitor e-ticket"
+
+msgid "здравствуйте!"
+msgstr "hello!"
+
+msgid "Вы успешно зарегистрированы на международную выставку"
+msgstr "You have successfully registered for the international exhibition"
+
+msgid "Откройте билет по кнопке ниже и покажите его на входе в электронном или распечатанном виде."
+msgstr "Open your ticket using the button below and show it at the entrance in electronic or printed form."
+
+msgid "Ваш персональный билет:"
+msgstr "Your personal ticket:"
+
+msgid "Открыть билет"
+msgstr "Open ticket"
+
+msgid "Даты проведения:"
+msgstr "Dates:"
+
+msgid "Время работы:"
+msgstr "Working hours:"
+
+msgid "14–15 апреля — 10:00–18:00, 16 апреля — 10:00–16:00"
+msgstr "Apr 14–15 — 10:00–18:00, Apr 16 — 10:00–16:00"
+
+msgid "Место проведения:"
+msgstr "Venue:"
+
+msgid "Подробнее о компаниях-участниках:"
+msgstr "More about participating companies:"
+
+msgid "С уважением, оргкомитет ICEE"
+msgstr "Best regards, ICEE organizing committee"
+
+msgid "все права защищены."
+msgstr "all rights reserved."
+
+msgid "Выставка"
+msgstr "Exhibition"
+
+msgid "14–16 апреля 2026"
+msgstr "April 14–16, 2026"
+
+msgid "г. Бишкек, Манеж КГАФКиС"
+msgstr "Bishkek, KGAFKiS Manege"
+
+msgid "Предварительная регистрация"
+msgstr "Pre-registration"
+
+msgid "избавит Вас от необходимости стоять в очереди у регистрационной стойки и значительно сэкономит время."
+msgstr "will save you from waiting in line at the registration desk and significantly save your time."
+
+msgid "На один электронный адрес возможно получить только один билет."
+msgstr "Only one ticket can be issued per email address."
+
+msgid "Электронный билет является индивидуальным и даёт право посетить мероприятие только его владельцу."
+msgstr "The e-ticket is personal and allows entry only to its owner."
+
+msgid "Цифры и факты"
+msgstr "Numbers and Facts"
+
+msgid "дня выставки"
+msgstr "days of exhibition"
+
+msgid "время работы"
+msgstr "working hours"
+
+msgid "вход бесплатный"
+msgstr "free entry"
+
+msgid "О выставке"
+msgstr "About the Exhibition"
+
+msgid "Условия посещения"
+msgstr "Visiting Rules"
+
+msgid "Контактное лицо"
+msgstr "Contact person"
+
+msgid "Арина Алейникова"
+msgstr "Arina Aleynikova"
+
+msgid "Свяжитесь с нами по вопросам участия, регистрации и партнерства."
+msgstr "Contact us regarding participation, registration, and partnership."
+
+msgid "Организатор"
+msgstr "Organizer"
+
+msgid "Адрес"
+msgstr "Address"

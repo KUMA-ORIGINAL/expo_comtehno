@@ -1,0 +1,420 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ICEE{% endblock %}</title>
+    <style>
+        /* Светлая тема, синие акценты */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --primary-soft: rgba(37, 99, 235, 0.14);
+            --text: #1e3a5f;
+            --text-muted: #64748b;
+            --border: #c7d7f0;
+            --bg: #eef4ff;
+            --header-h: 68px;
+        }
+        * { box-sizing: border-box; }
+        html { height: 100%; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.55;
+            color: var(--text);
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+        }
+        .page-shell {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        body.nav-menu-open {
+            overflow: hidden;
+        }
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1002;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.25rem;
+            flex-shrink: 0;
+        }
+        .header-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 0 1.5rem;
+            min-height: var(--header-h);
+        }
+        .logo-link {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+        .logo-link:hover { color: var(--primary-dark); }
+        .site-nav {
+            justify-self: center;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .site-nav-links {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+        }
+        .nav {
+            font-size: 0.9375rem;
+        }
+        .nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .nav a:hover { color: var(--primary-dark); }
+        .header-tools {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-self: end;
+        }
+        .lang-form { margin: 0; }
+        .lang-form--mobile {
+            display: none;
+        }
+        .lang-select {
+            padding: 0.35rem 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: #fff;
+            color: var(--text);
+            cursor: pointer;
+        }
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 3rem;
+            height: 3rem;
+            padding: 0;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .nav-toggle span {
+            display: block;
+            height: 2px;
+            width: 1.1rem;
+            margin: 0 auto;
+            background: var(--text);
+            border-radius: 1px;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .nav-toggle:hover { border-color: #ccc; background: #fafafa; }
+        .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+        .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .nav-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(15, 18, 22, 0.45);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .nav-backdrop.nav-backdrop--visible {
+            display: block;
+            opacity: 1;
+        }
+        .main {
+            padding: 2rem 1.25rem;
+            flex: 1 0 auto;
+        }
+        .footer {
+            background: #fff;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 2rem 1.25rem 1.5rem;
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+        .footer-inner { max-width: 1180px; margin: 0 auto; }
+        .footer-simple {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem 1.5rem;
+        }
+        .footer-brand {
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+        .footer-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+        }
+        .footer-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .footer-nav a:hover { color: var(--primary-dark); }
+        .footer-contact {
+            margin: 0;
+            font-size: 0.875rem;
+            width: 100%;
+            flex-basis: 100%;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .footer-bottom {
+            width: 100%;
+            flex-basis: 100%;
+            text-align: center;
+            padding-top: 1.25rem;
+            margin-top: 0.25rem;
+            font-size: 0.8125rem;
+            color: #888;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.55rem 1.35rem;
+            background: var(--primary);
+            color: #fff !important;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .btn:hover { background: var(--primary-dark); }
+        @media (max-width: 992px) {
+            .main { padding: 1.5rem 1rem; }
+        }
+        @media (max-width: 768px) {
+            .header-inner {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            .site-nav {
+                position: fixed;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+                top: var(--site-header-height, 68px);
+                z-index: 1001;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 0;
+                margin: 0;
+                background: #fff;
+                border-bottom: 1px solid var(--border);
+                border-radius: 0;
+                box-shadow: 0 12px 28px rgba(15, 18, 22, 0.12);
+                transform: translateY(-12px);
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+                box-sizing: border-box;
+            }
+            .site-nav.nav--open {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+                transform: translateY(0);
+            }
+            .site-nav-links {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+            }
+            .site-nav-links a {
+                padding: 1rem 1.25rem;
+                border-bottom: 1px solid #f0f2f4;
+            }
+            .lang-form--desktop { display: none; }
+            .lang-form--mobile {
+                display: block;
+                padding: 0.85rem 1.25rem 1rem;
+                width: 100%;
+            }
+            .lang-form--mobile .lang-select {
+                width: 100%;
+                max-width: none;
+            }
+            .nav-toggle {
+                display: flex;
+            }
+        }
+        @media (max-width: 640px) {
+            .footer-simple {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .footer-nav { flex-direction: column; gap: 0.65rem; }
+            .main { padding: 1.25rem 0.85rem; }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="page-shell">
+        <header class="header">
+            <div class="header-inner">
+                <a href="{% url 'exhibition_landing' %}" class="logo-link">ICEE</a>
+                <nav class="nav site-nav" id="site-nav" aria-label="{% trans 'Основная навигация' %}">
+                    <div class="site-nav-links">
+                        <a href="{% url 'exhibition_landing' %}">{% trans "Главная" %}</a>
+                        <a href="{% url 'exhibition_register_email' %}">{% trans "Регистрация" %}</a>
+                        <a href="{% url 'contacts_page' %}">{% trans "Контакты" %}</a>
+                    </div>
+                    <form action="{% url 'set_language' %}" method="post" class="lang-form lang-form--mobile">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <select name="language" onchange="this.form.submit()" class="lang-select" aria-label="{% trans 'Язык' %}">
+                            {% get_current_language as current_lang %}
+                            {% get_available_languages as available_langs %}
+                            {% for lang_code, lang_name in available_langs %}
+                            <option value="{{ lang_code }}" {% if lang_code == current_lang %}selected{% endif %}>{{ lang_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </nav>
+                <div class="header-tools">
+                    <form action="{% url 'set_language' %}" method="post" class="lang-form lang-form--desktop">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <select name="language" onchange="this.form.submit()" class="lang-select" aria-label="{% trans 'Язык' %}">
+                            {% get_current_language as current_lang %}
+                            {% get_available_languages as available_langs %}
+                            {% for lang_code, lang_name in available_langs %}
+                            <option value="{{ lang_code }}" {% if lang_code == current_lang %}selected{% endif %}>{{ lang_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="{% trans 'Меню' %}">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main class="main">
+            {% block content %}{% endblock %}
+        </main>
+        <footer class="footer">
+            <div class="footer-inner footer-simple">
+                <span class="footer-brand">ICEE</span>
+                <nav class="footer-nav" aria-label="{% trans 'Навигация в подвале' %}">
+                    <a href="{% url 'exhibition_landing' %}">{% trans "Главная" %}</a>
+                    <a href="{% url 'exhibition_register_email' %}">{% trans "Регистрация" %}</a>
+                    <a href="{% url 'contacts_page' %}">{% trans "Контакты" %}</a>
+                </nav>
+                <p class="footer-contact">
+                    WhatsApp: +996 770 090 919 · {% trans "Контактное лицо" %}: {% trans "Арина Алейникова" %}
+                </p>
+                <div class="footer-bottom">
+                    © ICEE, {% trans "Все права защищены" %}.
+                </div>
+            </div>
+        </footer>
+    </div>
+    <div class="nav-backdrop" id="nav-backdrop" aria-hidden="true" hidden></div>
+    {% block extra_js %}{% endblock %}
+    <script>
+    (function () {
+        var nav = document.getElementById('site-nav');
+        var btn = document.getElementById('nav-toggle');
+        var backdrop = document.getElementById('nav-backdrop');
+        if (!nav || !btn) return;
+        var mq = window.matchMedia('(max-width: 768px)');
+
+        function syncHeaderHeight() {
+            var hdr = document.querySelector('.header');
+            if (hdr) {
+                document.documentElement.style.setProperty('--site-header-height', hdr.offsetHeight + 'px');
+            }
+        }
+
+        function setOpen(open) {
+            var isMobile = mq.matches;
+            nav.classList.toggle('nav--open', open && isMobile);
+            btn.setAttribute('aria-expanded', open && isMobile ? 'true' : 'false');
+            document.body.classList.toggle('nav-menu-open', open && isMobile);
+            if (backdrop) {
+                var vis = open && isMobile;
+                if (vis) backdrop.removeAttribute('hidden');
+                else backdrop.setAttribute('hidden', '');
+                backdrop.classList.toggle('nav-backdrop--visible', vis);
+                backdrop.setAttribute('aria-hidden', vis ? 'false' : 'true');
+            }
+        }
+
+        function closeIfDesktop() {
+            if (!mq.matches) setOpen(false);
+        }
+
+        btn.addEventListener('click', function () {
+            if (!mq.matches) return;
+            syncHeaderHeight();
+            setOpen(!nav.classList.contains('nav--open'));
+        });
+
+        if (backdrop) {
+            backdrop.addEventListener('click', function () { setOpen(false); });
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && mq.matches) setOpen(false);
+        });
+
+        nav.querySelectorAll('.site-nav-links a').forEach(function (a) {
+            a.addEventListener('click', function () {
+                if (mq.matches) setOpen(false);
+            });
+        });
+
+        if (typeof mq.addEventListener === 'function') {
+            mq.addEventListener('change', function () { closeIfDesktop(); syncHeaderHeight(); });
+        } else if (typeof mq.addListener === 'function') {
+            mq.addListener(function () { closeIfDesktop(); syncHeaderHeight(); });
+        }
+        window.addEventListener('resize', function () { closeIfDesktop(); syncHeaderHeight(); });
+        syncHeaderHeight();
+    })();
+    </script>
+</body>
+</html>

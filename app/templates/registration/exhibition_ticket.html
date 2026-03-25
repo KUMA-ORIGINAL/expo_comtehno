@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}ICEE — {% trans "Электронный билет" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .ticket-wrap { max-width: 1020px; margin: 0 auto; }
+    .ticket {
+        background: #f8fafc;
+        border: 1px solid #dbeafe;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.14);
+    }
+    .ticket-top {
+        background: linear-gradient(90deg, #0f294f 0%, #1d4ed8 100%);
+        color: #fff;
+        padding: 0.8rem 1rem;
+        font-weight: 700;
+        font-size: 1.05rem;
+    }
+    .ticket-main {
+        display: grid;
+        grid-template-columns: 1fr 190px;
+        gap: 1rem;
+        padding: 1rem;
+        align-items: start;
+        background: #f3f4f6;
+    }
+    .name-col h1 {
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 3rem;
+        line-height: 1.06;
+        letter-spacing: 0.02em;
+        color: #0f172a;
+    }
+    .right-col {
+        background: #fff;
+        border: 1px solid #dbeafe;
+        border-radius: 8px;
+        padding: 0.65rem;
+        text-align: center;
+    }
+    .right-col img { width: 145px; height: 145px; }
+    .meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.7rem;
+        padding: 0 1rem 1rem;
+    }
+    .meta-card {
+        background: #fff;
+        border: 1px solid #dbeafe;
+        border-radius: 8px;
+        padding: 0.65rem;
+        font-size: 0.95rem;
+    }
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        padding: 0 1rem 1rem;
+    }
+    .btn-outline {
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        background: #fff;
+        border-radius: 10px;
+        text-decoration: none;
+        padding: 0.55rem 1.1rem;
+        font-weight: 600;
+    }
+    .btn-outline:hover { background: #eff6ff; }
+    @media (max-width: 900px) {
+        .ticket-main { grid-template-columns: 1fr; }
+        .right-col { grid-column: 1 / -1; }
+        .name-col h1 { font-size: 2.1rem; }
+        .name-col .code { font-size: 1.35rem; }
+        .meta { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ticket-wrap">
+    <div class="ticket">
+        <div class="ticket-top">ICEE 2026 · {% trans "Электронный билет" %}</div>
+        <div class="ticket-main">
+            <div class="name-col">
+                <h1>{{ visitor.last_name }}<br>{{ visitor.first_name }}</h1>
+                {% if visitor.middle_name %}<h1>{{ visitor.middle_name }}</h1>{% endif %}
+            </div>
+            <div class="right-col">
+                <img src="{{ ticket_qr_data_uri }}" alt="QR">
+                <div style="font-size:0.75rem;color:#64748b;">{% trans "Сканируйте при входе" %}</div>
+            </div>
+        </div>
+        <div class="meta">
+            <div class="meta-card"><strong>{% trans "Дата/время:" %}</strong><br>14–15 апреля: 10:00–18:00<br>16 апреля: 10:00–16:00</div>
+            <div class="meta-card"><strong>{% trans "Место:" %}</strong><br>{% trans "г. Бишкек, ул. Ахунбаева, 97, Манеж КГАФКиС" %}</div>
+            <div class="meta-card"><strong>{% trans "Компания:" %}</strong><br>{{ visitor.company }}</div>
+            <div class="meta-card"><strong>Email:</strong><br>{{ visitor.email }}</div>
+        </div>
+        <div class="actions">
+            <a href="{% url 'exhibition_ticket_pdf' ticket_token %}" class="btn">{% trans "Скачать PDF билет" %}</a>
+            {% if request.user.is_staff %}
+            <a href="{% url 'exhibition_ticket_print' ticket_token %}" class="btn-outline">{% trans "Печать для XPrinter" %}</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

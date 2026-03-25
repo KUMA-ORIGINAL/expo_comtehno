@@ -1,0 +1,153 @@
+{% load i18n %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>ICEE Ticket Print</title>
+    <style>
+        @page { size: 80.2mm 50mm; margin: 0; }
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #000;
+            background: #fff;
+            overflow: hidden;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .ticket {
+            width: 78.2mm;
+            height: 47.8mm;
+            border-top: 0.35mm solid #000;
+            border-bottom: 0.35mm solid #000;
+            border-left: none;
+            border-right: none;
+            border-radius: 0;
+            padding: 0.8mm 0.9mm 0.7mm 0.8mm;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            margin: 0.6mm auto 0;
+            page-break-after: avoid;
+            break-after: avoid-page;
+        }
+        .head {
+            text-align: center;
+            font-weight: 700;
+            font-size: 12pt;
+            letter-spacing: 0.02em;
+            color: #000;
+            border-bottom: 0.35mm dashed #666;
+            padding-bottom: 0.6mm;
+            margin-bottom: 0.6mm;
+        }
+        .name {
+            text-transform: uppercase;
+            font-size: 13.6pt;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 0.4mm 0;
+            color: #000;
+            word-break: break-word;
+        }
+        .layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2.2mm;
+            flex: 1;
+        }
+        .left {
+            flex: 0 1 47mm;
+            min-width: 0;
+            padding: 0.6mm 0.2mm 0.2mm 0.2mm;
+            text-align: center;
+        }
+        .company {
+            margin-top: 0.8mm;
+            font-size: 10pt;
+            line-height: 1.2;
+            color: #000;
+            font-weight: 600;
+            word-break: break-word;
+        }
+        .qr {
+            width: 23.5mm;
+            min-width: 23.5mm;
+            text-align: center;
+            border-left: 0.35mm solid #777;
+            padding-left: 1.1mm;
+            padding-right: 0;
+            box-sizing: border-box;
+        }
+        .qr img {
+            width: 21.4mm;
+            height: 21.4mm;
+            display: block;
+            margin: 0 auto;
+        }
+        .qr-note {
+            margin-top: 0.35mm;
+            font-size: 7pt;
+            color: #000;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        @media print {
+            html, body {
+                width: 80.2mm;
+                height: 50mm;
+                overflow: hidden;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket">
+        <div class="head">ICEE 2026 · {% trans "БИЛЕТ" %}</div>
+        <div class="layout">
+            <div class="left">
+                <div class="name">{{ visitor.last_name }} {{ visitor.first_name }}</div>
+                {% if visitor.middle_name %}<div class="name" style="font-size:8pt;">{{ visitor.middle_name }}</div>{% endif %}
+                <div class="company">{{ visitor.company }}</div>
+            </div>
+            <div class="qr">
+                <img src="{{ ticket_qr_data_uri }}" alt="QR">
+                <div class="qr-note">{% trans "Сканировать" %}</div>
+            </div>
+        </div>
+    </div>
+    <script>
+    (function () {
+        var backUrl = "{% url 'exhibition_checkin' %}";
+        var returned = false;
+
+        function goBack() {
+            if (returned) return;
+            returned = true;
+            try {
+                if (window.opener && !window.opener.closed) {
+                    window.opener.location.href = backUrl;
+                    window.opener.focus();
+                    window.close();
+                    return;
+                }
+            } catch (e) {}
+            window.location.href = backUrl;
+        }
+
+        window.addEventListener("afterprint", goBack);
+        window.onload = function () {
+            window.print();
+            setTimeout(goBack, 2000);
+        };
+    })();
+    </script>
+</body>
+</html>

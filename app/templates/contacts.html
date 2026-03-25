@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}ICEE — {% trans "Контакты" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contacts-container {
+        max-width: 760px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    .contacts-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .contacts-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    @media (max-width: 768px) {
+        .contacts-container {
+            padding: 1.25rem;
+        }
+    }
+    @media (max-width: 480px) {
+        .contacts-container {
+            padding: 1rem;
+        }
+        .contacts-card {
+            padding: 0.85rem;
+            font-size: 0.95rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contacts-container">
+    <h1 style="margin-top: 0; color: var(--primary);">{% trans "Контакты" %}</h1>
+    <p style="color: #475569; margin-bottom: 1.5rem;">
+        {% trans "Свяжитесь с нами по вопросам участия, регистрации и партнерства." %}
+    </p>
+
+    <div class="contacts-grid">
+        <div class="contacts-card">
+            <strong>{% trans "Организатор" %}:</strong> ICEE
+        </div>
+        <div class="contacts-card">
+            <strong>WhatsApp:</strong> +996 770 090 919
+        </div>
+        <div class="contacts-card">
+            <strong>{% trans "Контактное лицо" %}:</strong> Арина Алейникова
+        </div>
+        <div class="contacts-card">
+            <strong>Email:</strong> info@icee.kg
+        </div>
+        <div class="contacts-card">
+            <strong>{% trans "Адрес" %}:</strong> {% trans "г. Бишкек, Манеж КГАФКиС" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

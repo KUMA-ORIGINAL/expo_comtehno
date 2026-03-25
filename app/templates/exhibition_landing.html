@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}ICEE — {% trans "Международная специализированная выставка" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .landing-wrap {
+        max-width: 920px;
+        margin: 0 auto;
+    }
+    .hero {
+        text-align: center;
+        margin-bottom: 2.25rem;
+        padding: 1.5rem 0 0.5rem;
+    }
+    .hero h1 {
+        margin: 0 0 0.75rem 0;
+        font-size: clamp(1.45rem, 4vw, 2.05rem);
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+    }
+    .hero .hero-lead {
+        margin: 0 0 0.35rem 0;
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+    .hero .hero-badge {
+        display: inline-block;
+        margin: 0.85rem 0 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    .hero .hero-meta {
+        margin: 0 0 1.35rem 0;
+        font-size: 1rem;
+        color: var(--text-muted);
+    }
+    .hero .btn {
+        padding: 0.7rem 1.75rem;
+        font-size: 1rem;
+        border-radius: 12px;
+    }
+    .surface {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.35rem 1.5rem;
+        margin-bottom: 1.35rem;
+        box-shadow: 0 1px 3px rgba(15, 18, 22, 0.06);
+    }
+    .surface h3 {
+        margin: 0 0 0.85rem 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+    .facts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.85rem;
+    }
+    .fact-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+    }
+    .fact-card strong {
+        display: block;
+        font-size: 1.35rem;
+        color: var(--primary-dark);
+        margin-bottom: 0.2rem;
+    }
+    .fact-card span {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+    .landing-wrap p,
+    .landing-wrap li {
+        color: var(--text-muted);
+    }
+    .landing-wrap ul, .landing-wrap ol {
+        margin: 0;
+        padding-left: 1.2rem;
+    }
+    @media (max-width: 768px) {
+        .hero { padding: 0.5rem 0 0; }
+        .surface { padding: 1.15rem 1.1rem; border-radius: 12px; }
+        .hero .btn { width: 100%; text-align: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="landing-wrap">
+    <div class="hero">
+        <h1>{% trans "Регистрация участников и посетителей" %}<br>{% trans "международной специализированной выставки" %}</h1>
+        <p class="hero-lead">ICEE</p>
+        <span class="hero-badge">{% trans "Выставка" %}</span>
+        <p class="hero-meta">
+            {% trans "14–16 апреля 2026" %} · {% trans "г. Бишкек, Манеж КГАФКиС" %}
+        </p>
+        <a href="{% url 'exhibition_register_email' %}" class="btn">{% trans "Регистрация" %}</a>
+    </div>
+
+    <div class="surface">
+        <p style="margin: 0 0 0.85rem 0; color: var(--text);">
+            <strong>{% trans "Предварительная регистрация" %}</strong> {% trans "избавит Вас от необходимости стоять в очереди у регистрационной стойки и значительно сэкономит время." %}
+        </p>
+        <ul>
+            <li>{% trans "На один электронный адрес возможно получить только один билет." %}</li>
+            <li>{% trans "Электронный билет является индивидуальным и даёт право посетить мероприятие только его владельцу." %}</li>
+        </ul>
+    </div>
+
+    <section id="facts" class="surface">
+        <h3>{% trans "Цифры и факты" %}</h3>
+        <div class="facts-grid">
+            <div class="fact-card">
+                <strong>3</strong>
+                <span>{% trans "дня выставки" %}</span>
+            </div>
+            <div class="fact-card">
+                <strong>10:00–18:00</strong>
+                <span>{% trans "время работы" %}</span>
+            </div>
+            <div class="fact-card">
+                <strong>{% trans "Бесплатно" %}</strong>
+                <span>{% trans "вход бесплатный" %}</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="surface">
+        <h3>{% trans "О выставке" %}</h3>
+        <p style="margin: 0;">
+            {% trans "Мы рады вашему интересу к международной выставке ICEE. Сегодня выставка представляет собой уникальную площадку для делового сотрудничества и изучения современных инноваций и новых технологий. Ведь выставки способны перенести человека в другой мир, собрав под одной крышей всё лучшее, что есть в отрасли или в личных интересах." %}
+        </p>
+    </section>
+
+    <section id="conditions" class="surface">
+        <h3>{% trans "Условия посещения" %}</h3>
+        <ol style="margin: 0; padding-left: 1.2rem;">
+            <li>{% trans "Регистрация ОБЯЗАТЕЛЬНА для всех посетителей." %}</li>
+            <li>{% trans "Вход на выставку предоставляется БЕСПЛАТНО! Основанием для входа является именной бейдж. Бейдж выдается на стойке регистрации в фойе и действителен в течение всего периода работы выставки. Выставка работает с 10:00 до 18:00 первые два дня, третий день с 10:00 до 16:00. Вход посетителей прекращается за 30 минут до закрытия." %}</li>
+            <li>{% trans "Бейдж можно получить по предъявлении распечатанного или электронного билета после онлайн-регистрации на официальном сайте, а также пройти регистрацию в фойе в день посещения." %}</li>
+            <li>{% trans "Вход на конференции и семинары осуществляется по бейджам посетителя БЕСПЛАТНО!" %}</li>
+            <li>{% trans "Студенты профильных ВУЗов допускаются в третий день выставки только в сопровождении преподавателя, согласно списку (официально заверенному администрацией ВУЗа). Список должен быть согласован с организатором. ВУЗ может обратиться: +996 770 090 919 (WA) Арина Алейникова." %}</li>
+            <li>{% trans "Посещение лицами до 18 лет возможно только при сопровождении совершеннолетних (родителей)." %}</li>
+            <li>{% trans "Передача бейджей третьим лицам запрещена. Организатор вправе проверить соответствие данных в бейдже документу, удостоверяющему личность." %}</li>
+            <li>{% trans "На территории выставки запрещены торговля, распространение рекламной продукции, презентации и агитация без письменного согласия организатора." %}</li>
+            <li>{% trans "Организатор не несёт ответственности за утерю личных вещей." %}</li>
+            <li>{% trans "При утрате бейджа обратитесь на стойку регистрации для его восстановления." %}</li>
+            <li>{% trans "Приятного посещения выставки!" %}</li>
+        </ol>
+    </section>
+</div>
+{% endblock %}

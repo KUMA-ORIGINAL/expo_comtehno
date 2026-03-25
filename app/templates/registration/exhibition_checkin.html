@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}ICEE — {% trans "Сканирование билета" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkin-wrap { max-width: 760px; margin: 0 auto; }
+    .checkin-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+    }
+    .scan-input {
+        width: 100%;
+        padding: 0.85rem 0.95rem;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        font-size: 1rem;
+    }
+    .scan-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+    .result {
+        margin-top: 1rem;
+        padding: 0.9rem;
+        border: 1px solid #dbeafe;
+        border-radius: 10px;
+        background: #f8fbff;
+    }
+    .err {
+        margin-top: 0.75rem;
+        color: #b91c1c;
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 0.55rem 0.7rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="checkin-wrap">
+    <div class="checkin-card">
+        <h1 style="margin-top:0;">{% trans "Сканирование билета" %}</h1>
+        <p style="color:#64748b;margin-top:0;">
+            {% trans "Сканируйте QR/штрихкод (или вставьте ссылку вида /ticket/...)" %}
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" class="scan-input" name="ticket_code" value="{{ scanned_value }}" autofocus placeholder="{% trans 'ICEE-000123 или https://.../ticket/...' %}">
+        </form>
+        {% if error %}
+        <div class="err">{{ error }}</div>
+        {% endif %}
+
+        {% if visitor %}
+        <div class="result">
+            <div><strong>{% trans "Посетитель:" %}</strong> {{ visitor.last_name }} {{ visitor.first_name }} {{ visitor.middle_name }}</div>
+            <div><strong>{% trans "Компания:" %}</strong> {{ visitor.company }}</div>
+            <div><strong>Email:</strong> {{ visitor.email }}</div>
+            <div style="margin-top:0.8rem;">
+                <a class="btn" href="{% url 'exhibition_ticket_print' ticket_token %}" target="_blank">{% trans "Печать для XPrinter" %}</a>
+                <a class="btn" href="{% url 'exhibition_ticket' ticket_token %}" target="_blank">{% trans "Открыть билет" %}</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

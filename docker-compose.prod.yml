@@ -1,0 +1,94 @@
+
+services:
+  backend:
+    build:
+      context: app
+      dockerfile: Dockerfile.prod
+    container_name: backend
+    env_file:
+      - .env.prod
+    restart: always
+    expose:
+      - "8000"
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    mem_limit: 900m
+    cpus: "1.0"
+
+  database:
+    image: postgres:16.2-alpine3.18
+    container_name: postgres
+    env_file:
+      - .env.prod
+    restart: always
+    volumes:
+      - database-storage:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    mem_limit: 1g
+    cpus: "1.0"
+
+  redis:
+    image: redis:7.4-alpine
+    restart: always
+    volumes:
+      - redis_data:/data
+    command: >
+      redis-server
+      --save 900 1
+      --save 300 10
+      --maxmemory 200mb
+      --maxmemory-policy noeviction
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    mem_limit: 200m
+    cpus: "0.2"
+
+  nginx:
+    build: nginx
+    env_file:
+      - .env.prod
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+      - certs:/etc/letsencrypt
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - /etc/ssl/rp:/etc/nginx/rp:ro
+    depends_on:
+      - backend
+      - frontend
+    mem_limit: 128m
+    cpus: "0.2"
+
+  frontend:
+    build:
+      context: front
+      dockerfile: Dockerfile
+    restart: always
+    expose:
+      - "80"
+    mem_limit: 128m
+    cpus: "0.2"
+
+volumes:
+  database-storage:
+  redis_data:
+  static_volume:
+  media_volume:
+  certs:

@@ -1,0 +1,591 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-30 18:44+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: account/forms.py:48
+msgid "Password"
+msgstr ""
+
+#: account/forms.py:51
+msgid "Минимум 8 символов"
+msgstr ""
+
+#: account/forms.py:54
+msgid "Password confirmation"
+msgstr ""
+
+#: account/forms.py:67 account/models/user.py:53
+msgid "Email"
+msgstr ""
+
+#: account/forms.py:68 account/models/user.py:56
+msgid "Номер телефона"
+msgstr ""
+
+#: account/forms.py:69
+msgid "Имя"
+msgstr ""
+
+#: account/forms.py:70
+msgid "Фамилия"
+msgstr ""
+
+#: account/forms.py:71 account/models/user.py:64
+msgid "Отчество"
+msgstr ""
+
+#: account/forms.py:72
+msgid "Название организации"
+msgstr ""
+
+#: account/forms.py:73
+msgid "ИНН организации"
+msgstr ""
+
+#: account/forms.py:76
+msgid "14 цифр для юридических лиц"
+msgstr ""
+
+#: account/forms.py:77
+msgid "Будет использоваться для входа в систему"
+msgstr ""
+
+#: account/forms.py:136
+#, python-brace-format
+msgid "ИНН для {rule.country.name} имеет неверный формат"
+msgstr ""
+
+#: account/forms.py:141
+#, python-brace-format
+msgid "ИНН для {rule.country.name} должен состоять из {rule.inn_length} цифр"
+msgstr ""
+
+#: account/models/user.py:15
+msgid "Email обязателен"
+msgstr ""
+
+#: account/models/user.py:33
+msgid "Superuser must have is_staff=True"
+msgstr ""
+
+#: account/models/user.py:35
+msgid "Superuser must have is_superuser=True"
+msgstr ""
+
+#: account/models/user.py:62
+msgid "first name"
+msgstr ""
+
+#: account/models/user.py:63
+msgid "last name"
+msgstr ""
+
+#: account/models/user.py:90
+msgid "staff status"
+msgstr ""
+
+#: account/models/user.py:92
+msgid "Designates whether the user can log into this admin site."
+msgstr ""
+
+#: account/views/register.py:14
+msgid "Регистрация успешно завершена!"
+msgstr ""
+
+#: account/views/register.py:17
+msgid "Пожалуйста, исправьте ошибки в форме."
+msgstr ""
+
+#: common/base_admin.py:11
+msgid "Действие"
+msgstr ""
+
+#: common/base_admin.py:17
+msgid "Подробнее"
+msgstr ""
+
+#: config/settings.py:533
+msgid "Все тендеры"
+msgstr ""
+
+#: config/settings.py:539
+msgid "Новые"
+msgstr ""
+
+#: config/settings.py:545
+msgid "Прием заявок"
+msgstr ""
+
+#: config/settings.py:550
+msgid "Оценено"
+msgstr ""
+
+#: config/settings.py:555
+msgid "Окончено"
+msgstr ""
+
+#: config/settings.py:560
+msgid "Отменено"
+msgstr ""
+
+#: config/settings.py:571
+msgid "Все заявки"
+msgstr ""
+
+#: config/settings.py:579
+msgid "Подано"
+msgstr ""
+
+#: config/settings.py:586
+msgid "Победитель"
+msgstr ""
+
+#: config/settings.py:593
+msgid "Не выбран"
+msgstr ""
+
+#: config/settings.py:600
+msgid "Отозвано"
+msgstr ""
+
+#: config/settings.py:614
+msgid "Все пользователи"
+msgstr ""
+
+#: config/settings.py:621
+msgid "Все снабженцы"
+msgstr ""
+
+#: config/settings.py:626
+msgid "Все поставщики"
+msgstr ""
+
+#: config/settings.py:631
+msgid "В черном списке (поставщики)"
+msgstr ""
+
+#: config/settings.py:636
+msgid "Не в черном списке (поставщики)"
+msgstr ""
+
+#: config/settings.py:650
+msgid "Навигация"
+msgstr ""
+
+#: config/settings.py:654
+msgid "Тендеры"
+msgstr ""
+
+#: config/settings.py:672
+msgid "Мои заявки"
+msgstr ""
+
+#: config/settings.py:678
+msgid "Заявки"
+msgstr ""
+
+#: config/settings.py:684
+msgid "Протоколы"
+msgstr ""
+
+#: config/settings.py:690
+msgid "Моя компания"
+msgstr ""
+
+#: config/settings.py:699
+msgid "Поставщики"
+msgstr ""
+
+#: config/settings.py:706
+msgid "Снабженцы"
+msgstr ""
+
+#: config/settings.py:713 config/settings.py:731
+msgid "Пользователи"
+msgstr ""
+
+#: config/settings.py:719
+msgid "Уведомления"
+msgstr ""
+
+#: config/settings.py:727
+msgid "Пользователи и Доступ"
+msgstr ""
+
+#: config/settings.py:737
+msgid "Группы"
+msgstr ""
+
+#: config/settings.py:745
+msgid "Справочники"
+msgstr ""
+
+#: config/settings.py:748
+msgid "Категории тендеров"
+msgstr ""
+
+#: config/settings.py:754
+msgid "Условия оплаты"
+msgstr ""
+
+#: config/settings.py:760
+msgid "Единицы измерения"
+msgstr ""
+
+#: config/settings.py:766
+msgid "Страны"
+msgstr ""
+
+#: config/settings.py:774
+msgid "Задачи Celery"
+msgstr ""
+
+#: config/settings.py:778
+msgid "Отложенные"
+msgstr ""
+
+#: config/settings.py:786
+msgid "Cron-расписания"
+msgstr ""
+
+#: config/settings.py:794
+msgid "Интервалы"
+msgstr ""
+
+#: config/settings.py:802
+msgid "Периодические задачи"
+msgstr ""
+
+#: config/settings.py:810
+msgid "Солнечные события"
+msgstr ""
+
+#: templates/admin/login.html:15
+msgid "Django site admin"
+msgstr ""
+
+#: templates/admin/login.html:15
+msgid "Welcome back to"
+msgstr "С возвращением"
+
+#: templates/admin/login.html:26
+#, python-format
+msgid ""
+"You are authenticated as %(username)s, but are not authorized to access this "
+"page. Would you like to login to a different account?"
+msgstr ""
+
+#: templates/admin/login.html:49
+msgid "Log in"
+msgstr ""
+
+#: templates/admin/login.html:58
+msgid "Forgotten your password?"
+msgstr "Забыли свой пароль?"
+
+#: templates/admin/login.html:65
+msgid "Нет аккаунта?"
+msgstr ""
+
+#: templates/admin/login.html:67
+msgid "Зарегистрироваться"
+msgstr ""
+
+#: templates/admin/submit_line.html:19 templates/admin/submit_line.html:46
+msgid "Save"
+msgstr ""
+
+#: templates/admin/submit_line.html:65
+msgid "Save and continue editing"
+msgstr ""
+
+#: templates/admin/submit_line.html:67
+msgid "Save and view"
+msgstr ""
+
+#: templates/admin/submit_line.html:74
+msgid "Save and add another"
+msgstr ""
+
+#: templates/admin/submit_line.html:80
+msgid "Save as new"
+msgstr ""
+
+#: templates/admin/submit_line.html:89
+msgid "Close"
+msgstr ""
+
+#: templates/admin/submit_line.html:97
+msgid "Delete"
+msgstr ""
+
+#: templates/admin/tenders/bid/change_list_results.html:33
+#: templates/admin/tenders/tender/change_list_results.html:36
+msgid "Expand row"
+msgstr ""
+
+#: templates/admin/tenders/bid/empty_results.html:4
+#: templates/unfold/helpers/add_link.html:5
+#: templates/unfold/helpers/add_link.html:8
+#, python-format
+msgid "Add %(name)s"
+msgstr ""
+
+#: templates/admin/tenders/bid/empty_results.html:14
+msgid "No results found"
+msgstr "Ничего не найдено"
+
+#: templates/admin/tenders/bid/empty_results.html:18
+msgid ""
+"This page yielded into no results. Create a new item or reset your filters."
+msgstr ""
+"На этой странице нет результатов. Создайте новый элемент или сбросьте "
+"фильтры."
+
+#: templates/admin/tenders/bid/empty_results.html:31
+msgid "Reset filters"
+msgstr "Сбросить фильтры"
+
+#: templates/unfold/helpers/site_icon.html:7
+#: templates/unfold/helpers/site_icon.html:9
+#: templates/unfold/helpers/site_icon.html:11
+msgid "Home"
+msgstr ""
+
+#: templates/unfold/helpers/theme_switch.html:16
+msgid "Light"
+msgstr "Светлая"
+
+#: templates/unfold/helpers/theme_switch.html:23
+msgid "Dark"
+msgstr "Тёмная"
+
+#: templates/unfold/helpers/theme_switch.html:30
+msgid "System"
+msgstr "Системная"
+
+#: tenders/widgets.py:34
+msgid "Date"
+msgstr "Дата"
+
+#: tenders/widgets.py:35
+msgid "Time"
+msgstr ""
+
+msgid "Return to site"
+msgstr "Вернуться на сайт"
+
+msgid "Type to search"
+msgstr "Введите для поиска"
+
+msgid "Date from"
+msgstr "Дата с"
+
+msgid "Date to"
+msgstr "Дата по"
+
+msgid "From"
+msgstr "С"
+
+msgid "To"
+msgstr "По"
+
+msgid "Previous"
+msgstr "Назад"
+
+msgid "Next"
+msgstr "Далее"
+
+msgid "Apply Filters"
+msgstr "Применить фильтры"
+
+msgid "You have been successfully logged out from the administration"
+msgstr "Вы успешно вышли из административной панели"
+
+msgid "Select value"
+msgstr "Выберите значение"
+
+msgid "By"
+msgstr "По"
+
+msgid "Choose file to upload"
+msgstr "Выберите файл для загрузки"
+
+msgid ""
+"Raw passwords are not stored, so there is no way to see this user’s "
+"password, but you can change the password using <a href=\"{}\" "
+"class=\"text-primary-600 dark:text-primary-500\">this form</a>."
+msgstr ""
+"Пароли в открытом виде не сохраняются, поэтому вы не можете увидеть "
+"пароль этого пользователя, но вы можете изменить его с помощью <a "
+"href=\"{}\" class=\"text-primary-600 dark:text-primary-500\">этой формы</a>."
+
+msgid "General"
+msgstr "Главный"
+
+msgid "Click to download"
+msgstr "Нажмите, чтобы скачать"
+
+msgid ""
+"After you've created a user, you’ll be able to edit more user options."
+msgstr ""
+"После создания пользователя вы сможете изменить дополнительные параметры."
+
+msgid "Kyrgyzstan"
+msgstr "Кыргызстан"
+
+msgid "Add new item"
+msgstr "Добавить новый элемент"
+
+# Exhibition site
+msgid "Главная"
+msgstr "Главная"
+
+msgid "Регистрация"
+msgstr "Регистрация"
+
+msgid "Участникам"
+msgstr "Участникам"
+
+msgid "Забронировать стенд"
+msgstr "Забронировать стенд"
+
+msgid "Варианты стендов"
+msgstr "Варианты стендов"
+
+msgid "Список участников"
+msgstr "Список участников"
+
+msgid "Каталог"
+msgstr "Каталог"
+
+msgid "Посетителям"
+msgstr "Посетителям"
+
+msgid "Получить билет на выставку"
+msgstr "Получить билет на выставку"
+
+msgid "Время и место проведения"
+msgstr "Время и место проведения"
+
+msgid "Партнерам"
+msgstr "Партнерам"
+
+msgid "Подать заявку на партнёрство"
+msgstr "Подать заявку на партнёрство"
+
+msgid "Партнёрские возможности"
+msgstr "Партнёрские возможности"
+
+msgid "Контакты"
+msgstr "Контакты"
+
+msgid "Все права защищены"
+msgstr "Все права защищены"
+
+msgid "Регистрация на выставку"
+msgstr "Регистрация на выставку"
+
+msgid "Заполните регистрационную форму. Поля, помеченные звездочкой"
+msgstr "Заполните регистрационную форму. Поля, помеченные звездочкой"
+
+msgid "обязательны для заполнения"
+msgstr "обязательны для заполнения"
+
+msgid "На главную"
+msgstr "На главную"
+
+msgid "Регистрация успешна"
+msgstr "Регистрация успешна"
+
+msgid "Регистрация успешно завершена"
+msgstr "Регистрация успешно завершена"
+
+msgid "Спасибо за регистрацию на выставку ICEE. Мы ждём Вас 14–16 апреля 2026 в Манеже КГАФКиС!"
+msgstr "Спасибо за регистрацию на выставку ICEE. Мы ждём Вас 14–16 апреля 2026 в Манеже КГАФКиС!"
+
+msgid "Бейдж можно получить на стойке регистрации по предъявлении электронного билета."
+msgstr "Бейдж можно получить на стойке регистрации по предъявлении электронного билета."
+
+msgid "Зарегистрировать ещё одного посетителя"
+msgstr "Зарегистрировать ещё одного посетителя"
+
+msgid "Международная специализированная выставка"
+msgstr "Международная специализированная выставка"
+
+msgid "Регистрация участников и посетителей"
+msgstr "Регистрация участников и посетителей"
+
+msgid "международной специализированной выставки"
+msgstr "международной специализированной выставки"
+
+msgid "возможно несколько вариантов ответа"
+msgstr "возможно несколько вариантов ответа"
+
+msgid "Удерживайте Ctrl (Cmd на Mac) для выбора нескольких вариантов"
+msgstr "Удерживайте Ctrl (Cmd на Mac) для выбора нескольких вариантов"
+
+# Visit purpose choices
+msgid "Приобрести продукцию/услуги"
+msgstr "Приобрести продукцию/услуги"
+
+msgid "Получить информацию о продукции"
+msgstr "Получить информацию о продукции"
+
+msgid "Найти новых поставщиков"
+msgstr "Найти новых поставщиков"
+
+msgid "Поддержать существующие деловые контакты"
+msgstr "Поддержать существующие деловые контакты"
+
+msgid "Посетить семинар/конференцию/мастер-класс"
+msgstr "Посетить семинар/конференцию/мастер-класс"
+
+msgid "Пообщаться с коллегами"
+msgstr "Пообщаться с коллегами"
+
+# Email step
+msgid "Для посещения мероприятия, пожалуйста, зарегистрируйтесь."
+msgstr "Для посещения мероприятия, пожалуйста, зарегистрируйтесь."
+
+msgid "Введите адрес Вашей электронной почты:"
+msgstr "Введите адрес Вашей электронной почты:"
+
+msgid "Ваш email"
+msgstr "Ваш email"
+
+msgid "Продолжить"
+msgstr "Продолжить"
+
+msgid "У меня нет личного email, я хочу"
+msgstr "У меня нет личного email, я хочу"
+
+msgid "связаться с организаторами"
+msgstr "связаться с организаторами"
+
+msgid "На указанный email после регистрации придёт письмо с билетом."
+msgstr "На указанный email после регистрации придёт письмо с билетом."
+
+msgid "Изменить email"
+msgstr "Изменить email"
+
+msgid "На этот email уже зарегистрировались. Используйте другой адрес или свяжитесь с организаторами."
+msgstr "На этот email уже зарегистрировались. Используйте другой адрес или свяжитесь с организаторами."

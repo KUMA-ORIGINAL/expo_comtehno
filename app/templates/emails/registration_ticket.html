@@ -1,0 +1,85 @@
+{% load i18n %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICEE 2026</title>
+</head>
+<body style="margin:0;padding:0;background:#f1f5ff;font-family:Arial,'Segoe UI',sans-serif;color:#1f2937;">
+  <table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0" style="background:#f1f5ff;">
+    <tr>
+      <td align="center" style="padding:24px 10px;">
+        <table role="presentation" border="0" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;background:#ffffff;border:1px solid #dbe6ff;border-radius:12px;overflow:hidden;">
+          <tr>
+            <td style="background:#1d4ed8;padding:22px 24px 18px;color:#ffffff;">
+              <div style="font-size:24px;line-height:1.1;font-weight:800;letter-spacing:0.2px;">ICEE 2026</div>
+              <div style="font-size:13px;opacity:0.95;margin-top:6px;">{% trans "Электронный билет участника выставки" %}</div>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:22px 24px 12px;font-size:15px;line-height:1.55;">
+              <p style="margin:0 0 12px;"><strong>{{ full_name }}</strong>, {% trans "здравствуйте!" %}</p>
+              <p style="margin:0 0 12px;">
+                {% trans "Вы успешно зарегистрированы на международную выставку" %} <strong>{{ exhibition_name }}</strong>.
+              </p>
+              <p style="margin:0 0 6px;color:#475569;">
+                {% trans "Откройте билет по кнопке ниже и покажите его на входе в электронном или распечатанном виде." %}
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px 24px 18px;">
+              <table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0" style="background:#edf3ff;border:1px solid #cfe0ff;border-radius:10px;">
+                <tr>
+                  <td align="center" style="padding:16px 12px 18px;">
+                    <div style="font-size:13px;color:#334155;margin-bottom:12px;">{% trans "Ваш персональный билет:" %}</div>
+                    <a href="{{ ticket_url }}" target="_blank" style="display:inline-block;background:#ffd500;color:#111827;text-decoration:none;font-weight:800;font-size:15px;line-height:1;padding:13px 24px;border-radius:8px;">
+                      {% trans "Открыть билет" %}
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:0 24px 18px;">
+              <table role="presentation" border="0" width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="padding:12px;border:1px solid #e5edff;border-radius:10px;background:#fbfdff;font-size:13px;line-height:1.5;">
+                    <p style="margin:0 0 6px;"><strong>{% trans "Даты проведения:" %}</strong> {{ dates }}</p>
+                    <p style="margin:0 0 6px;"><strong>{% trans "Время работы:" %}</strong> {% trans "14–15 апреля — 10:00–18:00, 16 апреля — 10:00–16:00" %}</p>
+                    <p style="margin:0;"><strong>{% trans "Место проведения:" %}</strong> {{ address }}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:0 24px 22px;">
+              <p style="margin:0 0 10px;font-size:13px;line-height:1.55;color:#475569;">
+                {% trans "Подробнее о компаниях-участниках:" %}
+              </p>
+              <a href="{{ participants_url }}" target="_blank" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:700;font-size:12px;line-height:1;padding:10px 16px;border-radius:7px;">
+                {% trans "Список участников" %}
+              </a>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:14px 24px;background:#0f2f6f;color:#dbeafe;font-size:12px;line-height:1.5;">
+              <div>{% trans "С уважением, оргкомитет ICEE" %}</div>
+              <div style="margin-top:3px;">Тел.: <a href="tel:{{ phone }}" style="color:#ffffff;">{{ phone }}</a> · Email: <a href="mailto:{{ email }}" style="color:#ffffff;">{{ email }}</a></div>
+              <div style="margin-top:6px;opacity:0.85;">© ICEE, {% trans "все права защищены." %}</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
