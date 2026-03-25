@@ -72,17 +72,6 @@ services:
       - /etc/ssl/rp:/etc/nginx/rp:ro
     depends_on:
       - backend
-      - frontend
-    mem_limit: 128m
-    cpus: "0.2"
-
-  frontend:
-    build:
-      context: front
-      dockerfile: Dockerfile
-    restart: always
-    expose:
-      - "80"
     mem_limit: 128m
     cpus: "0.2"
 
