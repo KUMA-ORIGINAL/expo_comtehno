@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Заявка отправлена" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-box {
+        max-width: 560px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        text-align: center;
+    }
+    .success-box h1 { color: var(--primary); font-size: 1.35rem; margin-top: 0; }
+    .success-box p { color: var(--text-muted); line-height: 1.6; margin: 0 0 0.85rem 0; }
+    .success-box p:last-of-type { margin-bottom: 0; }
+    .contact-box {
+        margin-top: 1rem;
+        padding-top: 0.9rem;
+        border-top: 1px solid var(--border);
+        text-align: left;
+    }
+    .contact-box h2 {
+        margin: 0 0 0.45rem 0;
+        font-size: 0.95rem;
+        color: var(--text);
+    }
+    .contact-box p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.92rem;
+    }
+    .btn {
+        display: inline-block;
+        margin-top: 1.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="success-box">
+    <h1>{% trans "Спасибо!" %}</h1>
+    {% if campaign.success_message %}
+    <p>{{ campaign.success_message|linebreaksbr }}</p>
+    {% else %}
+    <p>{% trans "Ваша заявка принята. При необходимости мы свяжемся с вами по указанным контактам." %}</p>
+    {% endif %}
+    {% if campaign.send_applicant_confirmation %}
+    <p>{% trans "На указанный вами адрес электронной почты мы отправили письмо с подтверждением (проверьте папку «Спам», если письма нет во входящих)." %}</p>
+    {% endif %}
+    {% if campaign.event_contact %}
+    <div class="contact-box">
+        <h2>{% trans "Контакты организаторов" %}</h2>
+        <p>{{ campaign.event_contact }}</p>
+    </div>
+    {% endif %}
+    <a href="{% url 'registration_form' slug=campaign.slug %}" class="btn">{% trans "Зарегистрировать ещё одного участника" %}</a>
+</div>
+{% endblock %}

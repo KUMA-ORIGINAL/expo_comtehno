@@ -72,3 +72,7 @@ COPY ./app_entrypoint.dev.sh .
 RUN chmod +x ./app_entrypoint.dev.sh
 
 COPY . .
+RUN mkdir -p ${APP_HOME}/static ${APP_HOME}/media \
+  && chown -R dev-user:dev-user ${APP_HOME}
+
+USER dev-user

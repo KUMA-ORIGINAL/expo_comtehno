@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}ICEE — {% trans "Электронный билет" %}{% endblock %}
+{% block title %}{% if submission %}{{ submission_ticket_ui.heading }}{% else %}ICEE{% endif %} — {% trans "Электронный билет" %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -86,6 +86,52 @@
 {% block content %}
 <div class="ticket-wrap">
     <div class="ticket">
+        {% if submission %}
+        <div class="ticket-top">
+            {{ submission_ticket_ui.heading }}
+            {% if submission_ticket_ui.subtitle %}
+            <div style="margin-top:.35rem;font-size:.88rem;font-weight:500;opacity:.95;">{{ submission_ticket_ui.subtitle }}</div>
+            {% endif %}
+        </div>
+        <div class="ticket-main">
+            <div class="name-col">
+                <div style="font-size:0.95rem;color:#334155;margin-bottom:.35rem;">{{ submission_ticket_ui.participant_label }}</div>
+                <h1>{{ submission.applicant_name|default:"—" }}</h1>
+            </div>
+            <div class="right-col">
+                <img src="{{ ticket_qr_data_uri }}" alt="QR">
+                <div style="font-size:0.75rem;color:#64748b;">{% trans "Сканируйте при входе" %}</div>
+            </div>
+        </div>
+        <div class="meta">
+            {% if submission.campaign.subtitle %}
+            <div class="meta-card"><strong>{% trans "Мероприятие:" %}</strong><br>{{ submission.campaign.subtitle }}</div>
+            {% endif %}
+            {% if submission.campaign.event_dates or submission.campaign.event_schedule %}
+            <div class="meta-card">
+                {% if submission.campaign.event_dates %}<strong>{% trans "Даты проведения:" %}</strong> {{ submission.campaign.event_dates }}<br>{% endif %}
+                {% if submission.campaign.event_schedule %}<strong>{% trans "Время работы:" %}</strong> {{ submission.campaign.event_schedule }}{% endif %}
+            </div>
+            {% endif %}
+            {% if submission.campaign.event_location %}
+            <div class="meta-card"><strong>{% trans "Место проведения:" %}</strong><br>{{ submission.campaign.event_location }}</div>
+            {% endif %}
+            {% if submission.applicant_email %}
+            <div class="meta-card"><strong>Email:</strong><br>{{ submission.applicant_email }}</div>
+            {% endif %}
+            <div class="meta-card"><strong>{% trans "Код билета:" %}</strong><br>REG-{{ submission.id|stringformat:"06d" }}</div>
+            <div class="meta-card"><strong>{% trans "Дата регистрации:" %}</strong><br>{{ submission.created_at|date:"d.m.Y H:i" }}</div>
+            {% if submission.campaign.event_contact %}
+            <div class="meta-card"><strong>{% trans "Контакты:" %}</strong><br>{{ submission.campaign.event_contact }}</div>
+            {% endif %}
+            {% for label, value in ticket_pdf_rows %}
+            <div class="meta-card"><strong>{{ label }}:</strong><br>{{ value }}</div>
+            {% endfor %}
+        </div>
+        {% if submission_ticket_ui.footer_note %}
+        <div style="padding:0 1rem 1rem;color:#475569;font-size:0.92rem;line-height:1.5;">{{ submission_ticket_ui.footer_note|safe }}</div>
+        {% endif %}
+        {% else %}
         <div class="ticket-top">ICEE 2026 · {% trans "Электронный билет" %}</div>
         <div class="ticket-main">
             <div class="name-col">
@@ -103,10 +149,11 @@
             <div class="meta-card"><strong>{% trans "Компания:" %}</strong><br>{{ visitor.company }}</div>
             <div class="meta-card"><strong>Email:</strong><br>{{ visitor.email }}</div>
         </div>
+        {% endif %}
         <div class="actions">
             <a href="{% url 'exhibition_ticket_pdf' ticket_token %}" class="btn">{% trans "Скачать PDF билет" %}</a>
             {% if request.user.is_staff %}
-            <a href="{% url 'exhibition_ticket_print' ticket_token %}" class="btn-outline">{% trans "Печать для XPrinter" %}</a>
+            <a href="{% url 'exhibition_ticket_print' ticket_token %}" target="_blank" class="btn-outline">{% trans "Печать для XPrinter" %}</a>
             {% endif %}
         </div>
     </div>

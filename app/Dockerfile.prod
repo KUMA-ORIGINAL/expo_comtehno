@@ -71,6 +71,10 @@ COPY ./app_entrypoint.prod.sh .
 RUN sed -i 's/\r$//g' app_entrypoint.prod.sh
 RUN chmod +x app_entrypoint.prod.sh
 
-COPY . $PROJECT_DIR
+COPY . .
+RUN mkdir -p ${APP_HOME}/static ${APP_HOME}/media \
+  && chown -R dev-user:dev-user ${APP_HOME}
+
+USER dev-user
 
 CMD ["sh", "/app/app_entrypoint.prod.sh"]

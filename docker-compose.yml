@@ -58,6 +58,25 @@ services:
           cpus: '0.25'
           memory: 128M
 
+  celery_worker:
+    build: app
+    command: celery -A config worker -l INFO --concurrency=2
+    env_file:
+      - .env.dev
+    restart: unless-stopped
+    volumes:
+      - ./app:/app
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 384M
+
 volumes:
   database-storage:
   redis_data:

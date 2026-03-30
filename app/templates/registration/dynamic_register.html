@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ campaign.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 640px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .form-container h1 {
+        margin-top: 0;
+        color: var(--primary);
+        font-size: 1.35rem;
+        line-height: 1.3;
+    }
+    .form-container .subtitle { color: var(--text-muted); margin: -0.25rem 0 1.25rem 0; font-size: 0.95rem; }
+    .required { color: #dc3545; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-weight: 500; margin-bottom: 0.35rem; }
+    .form-input, .form-select {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+    .form-input:focus, .form-select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem var(--primary-soft);
+    }
+    .errorlist { list-style: none; padding: 0; margin: 0.25rem 0 0 0; color: #dc3545; font-size: 0.875rem; }
+    .nonfield { margin-bottom: 1rem; padding: 0.75rem 1rem; background: #fef2f2; color: #991b1b; border-radius: 6px; font-size: 0.9rem; }
+    .btn-primary {
+        background: var(--primary);
+        color: #fff;
+        padding: 0.6rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .back-link { display: inline-block; margin-bottom: 1rem; color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+    .back-link:hover { text-decoration: underline; }
+    .terms-box {
+        margin-top: 1.25rem;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: #f8fafc;
+    }
+    .event-box {
+        margin: 1rem 0 1.25rem 0;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: #f8fafc;
+    }
+    .event-box h2 {
+        margin: 0 0 0.6rem 0;
+        font-size: 1rem;
+        color: #0f172a;
+    }
+    .event-line {
+        margin: 0.25rem 0;
+        color: var(--text-muted);
+        font-size: 0.92rem;
+    }
+    .event-line strong {
+        color: var(--text);
+        font-weight: 600;
+    }
+    .terms-box h2 {
+        margin: 0 0 0.6rem 0;
+        font-size: 1rem;
+        color: #0f172a;
+    }
+    .terms-box .terms-content {
+        color: var(--text-muted);
+        line-height: 1.55;
+        font-size: 0.92rem;
+    }
+    .terms-box .terms-content :first-child { margin-top: 0; }
+    .terms-box .terms-content :last-child { margin-bottom: 0; }
+    .terms-box .terms-content ol,
+    .terms-box .terms-content ul { padding-left: 1.25rem; }
+    .terms-box .terms-content p,
+    .terms-box .terms-content div,
+    .terms-box .terms-content li { margin: 0.35rem 0; }
+    @media (max-width: 768px) {
+        .form-container { padding: 1.25rem; }
+        .btn-primary { width: 100%; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <!-- <a href="{% url 'registration_index' %}" class="back-link">← {% trans "К списку форм" %}</a> -->
+    <h1>{{ campaign.title }}</h1>
+    {% if campaign.subtitle %}<p class="subtitle">{{ campaign.subtitle }}</p>{% endif %}
+    {% if campaign.event_dates or campaign.event_schedule or campaign.event_location or campaign.event_contact %}
+    <div class="event-box">
+        <h2>{% trans "Детали мероприятия" %}</h2>
+        {% if campaign.event_dates %}<div class="event-line"><strong>{% trans "Даты" %}:</strong> {{ campaign.event_dates }}</div>{% endif %}
+        {% if campaign.event_schedule %}<div class="event-line"><strong>{% trans "Время" %}:</strong> {{ campaign.event_schedule }}</div>{% endif %}
+        {% if campaign.event_location %}<div class="event-line"><strong>{% trans "Место" %}:</strong> {{ campaign.event_location }}</div>{% endif %}
+        {% if campaign.event_contact %}<div class="event-line"><strong>{% trans "Контакты" %}:</strong> {{ campaign.event_contact }}</div>{% endif %}
+    </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div class="nonfield">{{ form.non_field_errors }}</div>
+        {% endif %}
+        {% for field in form %}
+        <div class="form-group"
+             data-field-name="{{ field.name }}"
+             {% if field.name|slice:"-7:" == "__other" %}data-other-wrapper="true" style="display:none"{% endif %}>
+            <label for="{{ field.id_for_label }}">
+                {{ field.label }}
+                {% if field.field.required %}<span class="required">*</span>{% endif %}
+            </label>
+            {{ field }}
+            {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn-primary">{% trans "Отправить заявку" %}</button>
+    </form>
+    {% if campaign.participation_terms %}
+    <div class="terms-box">
+        <h2>{% trans "Условия участия" %}</h2>
+        <div class="terms-content">{{ campaign.participation_terms|safe }}</div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const selects = document.querySelectorAll(".js-other-select[data-other-field]");
+    const toggleOtherInput = (selectEl) => {
+        const otherFieldName = selectEl.dataset.otherField;
+        if (!otherFieldName) return;
+        const wrapper = document.querySelector('[data-field-name="' + otherFieldName + '"]');
+        if (!wrapper) return;
+        const isOther = selectEl.value === "__other__";
+        wrapper.style.display = isOther ? "" : "none";
+        if (!isOther) {
+            const input = wrapper.querySelector("input");
+            if (input) input.value = "";
+        }
+    };
+
+    selects.forEach((selectEl) => {
+        toggleOtherInput(selectEl);
+        selectEl.addEventListener("change", () => toggleOtherInput(selectEl));
+    });
+});
+</script>
+{% endblock %}

@@ -67,6 +67,10 @@
             min-width: 0;
             padding: 0.6mm 0.2mm 0.2mm 0.2mm;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.2mm;
         }
         .company {
             margin-top: 0.8mm;
@@ -75,6 +79,27 @@
             color: #000;
             font-weight: 600;
             word-break: break-word;
+        }
+        .extra {
+            margin-top: 0.7mm;
+            font-size: 7.2pt;
+            line-height: 1.2;
+            color: #222;
+            text-align: left;
+        }
+        .extra div {
+            margin-top: 0.25mm;
+            word-break: break-word;
+            white-space: normal;
+        }
+        .footer-note {
+            margin-top: 0.55mm;
+            font-size: 6.6pt;
+            color: #444;
+            line-height: 1.15;
+            text-align: left;
+            word-break: break-word;
+            white-space: normal;
         }
         .qr {
             width: 23.5mm;
@@ -110,12 +135,31 @@
 </head>
 <body>
     <div class="ticket">
-        <div class="head">ICEE 2026 · {% trans "БИЛЕТ" %}</div>
+        <div class="head">
+            {% if submission %}
+                {{ submission_ticket_ui.print_heading|default:""|truncatechars:32 }}
+            {% else %}
+                ICEE 2026 · {% trans "БИЛЕТ" %}
+            {% endif %}
+        </div>
         <div class="layout">
             <div class="left">
+                {% if submission %}
+                <div style="font-size:8pt;color:#222;">{{ submission_ticket_ui.participant_label }}</div>
+                <div class="name">{{ submission.applicant_name|default:"—" }}</div>
+                <div class="company">{{ submission.campaign.subtitle|default:""|truncatechars:40 }}</div>
+                {% if ticket_print_rows %}
+                <div class="extra">
+                    {% for label, value in ticket_print_rows %}
+                    <div><strong>{{ label }}:</strong> {{ value }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% else %}
                 <div class="name">{{ visitor.last_name }} {{ visitor.first_name }}</div>
                 {% if visitor.middle_name %}<div class="name" style="font-size:8pt;">{{ visitor.middle_name }}</div>{% endif %}
                 <div class="company">{{ visitor.company }}</div>
+                {% endif %}
             </div>
             <div class="qr">
                 <img src="{{ ticket_qr_data_uri }}" alt="QR">

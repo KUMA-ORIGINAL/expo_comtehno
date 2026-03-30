@@ -33,8 +33,6 @@ urlpatterns = [
 
     path("ckeditor5/", include('django_ckeditor_5.urls')),
 
-    path('api/sentry-debug/', trigger_error),
-
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
@@ -45,6 +43,7 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
+    urlpatterns += [path('api/sentry-debug/', trigger_error)]
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += [path('silk/', include('silk.urls', namespace='silk'))]

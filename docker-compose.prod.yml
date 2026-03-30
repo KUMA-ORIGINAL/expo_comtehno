@@ -21,6 +21,23 @@ services:
     mem_limit: 900m
     cpus: "1.0"
 
+  celery_worker:
+    build:
+      context: app
+      dockerfile: Dockerfile.prod
+    container_name: celery_worker
+    env_file:
+      - .env.prod
+    restart: always
+    command: celery -A config worker -l INFO --concurrency=2
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    mem_limit: 400m
+    cpus: "0.35"
+
   database:
     image: postgres:16.2-alpine3.18
     container_name: postgres

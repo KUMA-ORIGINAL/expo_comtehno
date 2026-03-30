@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ campaign.title }}{% endblock %}
+
+{% block content %}
+<div style="max-width:560px;margin:0 auto;background:#fff;padding:2rem;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+    <h1 style="margin-top:0;color:var(--primary);">{{ campaign.title }}</h1>
+    <p style="color:var(--text-muted);">{{ message }}</p>
+    <p><a href="{% url 'registration_index' %}" style="color:var(--primary);">{% trans "К списку форм" %}</a></p>
+</div>
+{% endblock %}

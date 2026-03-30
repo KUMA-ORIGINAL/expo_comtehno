@@ -1,8 +1,11 @@
+import re
+import sys
 from datetime import timedelta
 from pathlib import Path
 
 import environ
 import sentry_sdk
+from corsheaders.defaults import default_headers
 from django.db import models
 from django.templatetags.static import static
 from django.urls import reverse_lazy, reverse
@@ -18,6 +21,7 @@ env = environ.Env(
 SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = bool(env("DEBUG", default=0))
+RUNNING_TESTS = "test" in sys.argv
 
 ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS").split(" ")
 
@@ -30,6 +34,19 @@ CORS_ALLOW_CREDENTIALS = True   #
 # CORS_ALLOW_CREDENTIALS = True
 # CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS").split(" ")
 CORS_ALLOW_HEADERS = ["Authorization", "Content-Type", "Accept"]
+CORS_ALLOW_HEADERS = list(default_headers)
+default_cors_origins = [] if DEBUG else [f"https://{DOMAIN}", f"https://www.{DOMAIN}"]
+raw_cors_allowed_origins = env("CORS_ALLOWED_ORIGINS", default="")
+CORS_ALLOWED_ORIGINS = (
+    [origin for origin in re.split(r"[\s,]+", raw_cors_allowed_origins.strip()) if origin]
+    if raw_cors_allowed_origins.strip()
+    else default_cors_origins
+)
+CORS_ALLOW_ALL_ORIGINS = env.bool(
+    "CORS_ALLOW_ALL_ORIGINS",
+    default=DEBUG and not CORS_ALLOWED_ORIGINS,
+)
+CORS_ALLOW_CREDENTIALS = env.bool("CORS_ALLOW_CREDENTIALS", default=False)
 
 if DEBUG:
     SECURE_SSL_REDIRECT = False
@@ -183,14 +200,15 @@ LANGUAGES = (
     ('ky', 'Кыргызча'),
 )
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
-MODELTRANSLATION_LANGUAGES = ('ru', 'ky')
+MODELTRANSLATION_LANGUAGES = ('ru', 'en', 'ky')
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru',),
+    'en': ('ru',),
     'ky': ('ru',),
 }
 MODELTRANSLATION_AUTO_POPULATE = True
 
-LOGIN_REDIRECT_URL = reverse_lazy("admin:account_exhibitionvisitor_changelist")
+LOGIN_REDIRECT_URL = reverse_lazy("admin:account_registrationsubmission_changelist")
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -202,6 +220,10 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+LOG_FILE_PATH = env(
+    "DJANGO_LOG_FILE",
+    default="/tmp/django.log" if DEBUG or RUNNING_TESTS else str(BASE_DIR / "django.log"),
+)
 
 CSRF_TRUSTED_ORIGINS = [
     f"https://{DOMAIN}",
@@ -226,7 +248,7 @@ INTERNAL_IPS = [
     'localhost',
 ]
 
-if DEBUG:
+if DEBUG and not RUNNING_TESTS:
     INSTALLED_APPS += ['silk', "debug_toolbar",]
     MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')
     MIDDLEWARE.insert(1, 'debug_toolbar.middleware.DebugToolbarMiddleware',)
@@ -241,6 +263,20 @@ CACHES = {
         }
     }
 }
+
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://redis:6379/0")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default=CELERY_BROKER_URL)
+CELERY_TASK_ALWAYS_EAGER = env.bool("CELERY_TASK_ALWAYS_EAGER", default=False)
+CELERY_TASK_EAGER_PROPAGATES = True
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
+
+# False (по умолчанию): письма после регистрации отправляются сразу из веб-процесса (worker не обязателен).
+# True: поставить в очередь Celery (нужен запущенный celery worker).
+REGISTRATION_EMAIL_VIA_CELERY = env.bool("REGISTRATION_EMAIL_VIA_CELERY", default=False)
 
 
 SPECTACULAR_SETTINGS = {
@@ -304,7 +340,7 @@ LOGGING = {
         "file": {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "INFO",
-            "filename": BASE_DIR / "django.log",
+            "filename": LOG_FILE_PATH,
             "maxBytes": 10 * 1024 * 1024,  # 10 MB
             "backupCount": 5,
             "formatter": "verbose",
@@ -435,26 +471,73 @@ CKEDITOR_5_CONFIGS = {
     }
 }
 
+
+def unfold_is_superuser(request):
+    return bool(request.user and request.user.is_superuser)
+
+
+def unfold_can_view_users(request):
+    return unfold_is_superuser(request)
+
+
+def unfold_can_view_visitors(request):
+    return bool(request.user and request.user.is_staff and request.user.has_perm("account.view_exhibitionvisitor"))
+
+
+def unfold_can_view_campaigns(request):
+    return bool(request.user and request.user.is_staff and request.user.has_perm("account.view_registrationcampaign"))
+
+
+def unfold_can_view_submissions(request):
+    return bool(request.user and request.user.is_staff and request.user.has_perm("account.view_registrationsubmission"))
+
+
+def unfold_can_use_checkin(request):
+    return bool(request.user and request.user.is_staff)
+
+
+def unfold_has_registration_workspace(request):
+    return any(
+        check(request)
+        for check in (
+            unfold_can_view_visitors,
+            unfold_can_view_campaigns,
+            unfold_can_view_submissions,
+            unfold_can_use_checkin,
+        )
+    )
+
+
+def unfold_has_system_workspace(request):
+    return any(
+        check(request)
+        for check in (
+            unfold_can_view_users,
+            unfold_can_view_campaigns,
+        )
+    )
+
 UNFOLD = {
-    "SITE_TITLE": 'ICEE',
-    "SITE_HEADER": "ICEE",
-    "SITE_SUBHEADER": "Регистрация на выставку",
+    "SITE_TITLE": 'Регистрация и заявки',
+    "SITE_HEADER": "Регистрация и заявки",
+    # "SITE_SUBHEADER": "Регистрация и заявки",
     "SITE_URL": "/",
     "SITE_SYMBOL": "menu",  # symbol from icon set
     "SHOW_HISTORY": True, # show/hide "History" button, default: True
     "SHOW_VIEW_ON_SITE": True, # show/hide "View on site" button, default: True
     "SHOW_BACK_BUTTON": True,
-    "SITE_FAVICONS": [
-        {
-            "rel": "icon",
-            "sizes": "32x32",
-            "href": lambda request: static("iaeee_logo.png"),
-        },
-    ],
-    "SITE_ICON": {
-        "light": lambda request: static("iaeee_logo.png"),
-        "dark": lambda request: static("iaeee_logo.png"),
-    },
+    # "SITE_FAVICONS": [
+    #     {
+    #         "rel": "icon",
+    #         "sizes": "32x32",
+    #         "href": lambda request: static("iaeee_logo.png"),
+    #     },
+    # ],
+    # "SITE_ICON": {
+    #     "light": lambda request: static("iaeee_logo.png"),
+    #     "dark": lambda request: static("iaeee_logo.png"),
+    # },
+    "SHOW_LANGUAGES": True,
     "BORDER_RADIUS": "6px",
     "COLORS": {
         "base": {
@@ -492,28 +575,60 @@ UNFOLD = {
             "important-dark": "var(--color-base-100)"
         }
     },
-    # "SIDEBAR": {
-    #     "show_search": False,
-    #     "show_all_applications": False,
-    #     "navigation": [
-    #         {
-    #             "title": _("Пользователи и Доступ"),
-    #             "collapsible": False,
-    #             "items": [
-    #                 {
-    #                     "title": _("Пользователи"),
-    #                     "icon": "person",
-    #                     "link": reverse_lazy("admin:account_user_changelist"),
-    #                     "permission": lambda request: request.user.is_superuser,
-    #                 },
-    #                 {
-    #                     "title": _("Группы"),
-    #                     "icon": "group",
-    #                     "link": reverse_lazy("admin:auth_group_changelist"),
-    #                     "permission": lambda request: request.user.is_superuser,
-    #                 },
-    #             ],
-    #         },
-    #     ],
-    # }
+    "SIDEBAR": {
+        "show_search": False,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": _("Рабочее место"),
+                "collapsible": False,
+                "permission": unfold_has_registration_workspace,
+                "items": [
+                    {
+                        "title": _("Регистрации и формы"),
+                        "icon": "event_note",
+                        "link": reverse_lazy("admin:account_registrationcampaign_changelist"),
+                        "permission": unfold_can_view_campaigns,
+                    },
+                    {
+                        "title": _("Заявки"),
+                        "icon": "assignment",
+                        "link": reverse_lazy("admin:account_registrationsubmission_changelist"),
+                        "permission": unfold_can_view_submissions,
+                    },
+                    {
+                        "title": _("Сканирование билетов"),
+                        "icon": "qr_code_scanner",
+                        "link": reverse_lazy("exhibition_checkin"),
+                        "permission": unfold_can_use_checkin,
+                    },
+                ],
+            },
+            {
+                "title": _("Система"),
+                "collapsible": False,
+                "permission": unfold_has_system_workspace,
+                "items": [
+                    {
+                        "title": _("Пользователи"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:account_user_changelist"),
+                        "permission": unfold_can_view_users,
+                    },
+                    {
+                        "title": _("Группы"),
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                        "permission": unfold_can_view_users,
+                    },
+                    {
+                        "title": _("API схема"),
+                        "icon": "schema",
+                        "link": reverse_lazy("schema"),
+                        "permission": unfold_is_superuser,
+                    },
+                ],
+            },
+        ],
+    }
 }

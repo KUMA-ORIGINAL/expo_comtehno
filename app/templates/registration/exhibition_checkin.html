@@ -51,7 +51,7 @@
         </p>
         <form method="post">
             {% csrf_token %}
-            <input type="text" class="scan-input" name="ticket_code" value="{{ scanned_value }}" autofocus placeholder="{% trans 'ICEE-000123 или https://.../ticket/...' %}">
+            <input type="text" class="scan-input" name="ticket_code" value="{{ scanned_value }}" autofocus placeholder="{% trans 'REG-000123, ICEE-000123 или ссылка .../ticket/...' %}">
         </form>
         {% if error %}
         <div class="err">{{ error }}</div>
@@ -62,6 +62,17 @@
             <div><strong>{% trans "Посетитель:" %}</strong> {{ visitor.last_name }} {{ visitor.first_name }} {{ visitor.middle_name }}</div>
             <div><strong>{% trans "Компания:" %}</strong> {{ visitor.company }}</div>
             <div><strong>Email:</strong> {{ visitor.email }}</div>
+            <div style="margin-top:0.8rem;">
+                <a class="btn" href="{% url 'exhibition_ticket_print' ticket_token %}" target="_blank">{% trans "Печать для XPrinter" %}</a>
+                <a class="btn" href="{% url 'exhibition_ticket' ticket_token %}" target="_blank">{% trans "Открыть билет" %}</a>
+            </div>
+        </div>
+        {% elif submission %}
+        <div class="result">
+            <div><strong>{% trans "Заявка (мероприятие):" %}</strong> {{ submission.campaign.title }}</div>
+            <div><strong>{% trans "Участник:" %}</strong> {{ submission.applicant_name }}</div>
+            <div><strong>Email:</strong> {{ submission.applicant_email|default:"—" }}</div>
+            {% if submission.campaign.subtitle %}<div><strong>{% trans "Детали:" %}</strong> {{ submission.campaign.subtitle }}</div>{% endif %}
             <div style="margin-top:0.8rem;">
                 <a class="btn" href="{% url 'exhibition_ticket_print' ticket_token %}" target="_blank">{% trans "Печать для XPrinter" %}</a>
                 <a class="btn" href="{% url 'exhibition_ticket' ticket_token %}" target="_blank">{% trans "Открыть билет" %}</a>

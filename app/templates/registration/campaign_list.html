@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Регистрация" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .list-wrap { max-width: 720px; margin: 0 auto; }
+    .list-wrap h1 { margin-top: 0; color: var(--primary); font-size: 1.5rem; }
+    .card-list { display: flex; flex-direction: column; gap: 1rem; }
+    .reg-card {
+        display: block;
+        background: #fff;
+        padding: 1.25rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        text-decoration: none;
+        color: var(--text);
+        border: 1px solid var(--border);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .reg-card:hover {
+        border-color: var(--primary-light);
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.12);
+    }
+    .reg-card h2 { margin: 0 0 0.35rem 0; font-size: 1.15rem; color: var(--primary-dark); }
+    .reg-card p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+    .empty-hint { color: var(--text-muted); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="list-wrap">
+    <h1>{% trans "Выберите форму регистрации" %}</h1>
+    {% if campaigns %}
+    <div class="card-list">
+        {% for c in campaigns %}
+        <a class="reg-card" href="{% url 'registration_form' slug=c.slug %}">
+            <h2>{{ c.title }}</h2>
+            {% if c.subtitle %}<p>{{ c.subtitle }}</p>{% endif %}
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-hint">{% trans "Сейчас нет открытых форм. Загляните позже." %}</p>
+    {% endif %}
+</div>
+{% endblock %}
