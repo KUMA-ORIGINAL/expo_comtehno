@@ -282,3 +282,123 @@ msgstr "Organizer"
 
 msgid "Адрес"
 msgstr "Address"
+
+msgid "Печать билета ICEE"
+msgstr "ICEE Ticket Print"
+
+msgid "ЭЛЕКТРОННЫЙ БИЛЕТ"
+msgstr "ELECTRONIC TICKET"
+
+msgid "Посетитель:"
+msgstr "Visitor:"
+
+msgid "Компания"
+msgstr "Company"
+
+msgid "Дата регистрации"
+msgstr "Registration date"
+
+msgid "Код"
+msgstr "Code"
+
+msgid "Дата и время проведения:"
+msgstr "Date and time:"
+
+msgid "14-15 апреля: 10:00-18:00"
+msgstr "Apr 14-15: 10:00-18:00"
+
+msgid "16 апреля: 10:00-16:00"
+msgstr "Apr 16: 10:00-16:00"
+
+msgid "Адрес: г. Бишкек, ул. Ахунбаева, 97, Манеж КГАФКиС"
+msgstr "Address: Bishkek, Akhunbaeva st. 97, KGAFKiS Manege"
+
+msgid "Для входа предъявите билет в распечатанном или электронном виде."
+msgstr "Show your ticket at the entrance in printed or electronic form."
+
+msgid "Контакты: +996 775 000 005, info@icee.kg"
+msgstr "Contacts: +996 775 000 005, info@icee.kg"
+
+msgid "Выберите форму регистрации"
+msgstr "Choose a registration form"
+
+msgid "Сейчас нет открытых форм. Загляните позже."
+msgstr "There are no open forms right now. Please check back later."
+
+msgid "Детали мероприятия"
+msgstr "Event details"
+
+msgid "Даты"
+msgstr "Dates"
+
+msgid "Время"
+msgstr "Time"
+
+msgid "Место"
+msgstr "Venue"
+
+msgid "Отправить заявку"
+msgstr "Submit application"
+
+msgid "Условия участия"
+msgstr "Participation terms"
+
+msgid "К списку форм"
+msgstr "Back to forms"
+
+msgid "Язык"
+msgstr "Language"
+
+msgid "Заявка отправлена"
+msgstr "Application sent"
+
+msgid "Спасибо!"
+msgstr "Thank you!"
+
+msgid "Ваша заявка принята. При необходимости мы свяжемся с вами по указанным контактам."
+msgstr "Your application has been received. If needed, we will contact you using the details provided."
+
+msgid "На указанный вами адрес электронной почты мы отправили письмо с подтверждением (проверьте папку «Спам», если письма нет во входящих)."
+msgstr "We have sent a confirmation email to the address you provided (check your Spam folder if it is not in Inbox)."
+
+msgid "Контакты организаторов"
+msgstr "Organizer contacts"
+
+msgid "Зарегистрировать ещё одного участника"
+msgstr "Register another participant"
+
+msgid "Подтверждение заявки"
+msgstr "Application confirmation"
+
+msgid "Ваш персональный пропуск:"
+msgstr "Your personal pass:"
+
+msgid "Открыть подтверждение"
+msgstr "Open confirmation"
+
+msgid "Новая заявка"
+msgstr "New application"
+
+msgid "ID заявки"
+msgstr "Application ID"
+
+msgid "Форма (код)"
+msgstr "Form (code)"
+
+msgid "Билет PDF"
+msgstr "Ticket PDF"
+
+msgid "Страница билета"
+msgstr "Ticket page"
+
+msgid "Заявка получена"
+msgstr "Application received"
+
+msgid "Новая заявка: {title}"
+msgstr "New application: {title}"
+
+msgid "Спасибо, ваша заявка принята. При необходимости мы свяжемся с вами."
+msgstr "Thank you, your application has been received. We will contact you if needed."
+
+msgid "Билет (PDF): {url}"
+msgstr "Ticket (PDF): {url}"

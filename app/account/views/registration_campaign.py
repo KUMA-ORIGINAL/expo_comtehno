@@ -62,4 +62,18 @@ def registration_form(request, slug):
 
 def registration_success(request, slug):
     campaign = get_object_or_404(RegistrationCampaign, slug=slug, is_active=True)
-    return render(request, "registration/dynamic_success.html", {"campaign": campaign})
+    lang_code = (get_language() or "ru").split("-", 1)[0]
+    if lang_code == "ru":
+        success_message_to_show = campaign.success_message
+    else:
+        localized_field = f"success_message_{lang_code}"
+        success_message_to_show = getattr(campaign, localized_field, "") or ""
+
+    return render(
+        request,
+        "registration/dynamic_success.html",
+        {
+            "campaign": campaign,
+            "success_message_to_show": success_message_to_show,
+        },
+    )

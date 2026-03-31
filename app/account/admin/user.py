@@ -1,12 +1,9 @@
-from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.models import Group
-from django.urls import reverse
-from django.utils.html import format_html
-from django_countries import countries
+from django.utils.translation import gettext_lazy as _
 
-from unfold.admin import ModelAdmin as UnfoldModelAdmin, TabularInline
+from unfold.admin import ModelAdmin as UnfoldModelAdmin
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 
 from ..models import User
@@ -22,12 +19,29 @@ class GroupAdmin(GroupAdmin, UnfoldModelAdmin):
 
 @admin.register(User)
 class UserAdmin(UserAdmin, BaseModelAdmin):
+    form = UserChangeForm
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
 
     model = User
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        (_("Личная информация"), {"fields": ("first_name", "last_name", "middle_name", "phone_number")}),
+        (_("Права доступа"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        (_("Важные даты"), {"fields": ("last_login", "date_joined")}),
+    )
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("email", "phone_number", "first_name", "last_name", "middle_name", "password1", "password2"),
+            },
+        ),
+    )
+    list_display = ('id', 'email', 'first_name', 'last_name')
     list_filter = ("is_staff", "is_superuser", "is_active", "groups",)
-    search_fields = ("phone_number",)
+    search_fields = ("email",)
     ordering = ('-date_joined',)
-    list_display_links = ('id', 'phone_number')
+    list_display_links = ('id', 'email')
     list_per_page = 50

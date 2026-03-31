@@ -162,11 +162,11 @@ def _draw_visitor_pdf(request, response, visitor, token):
     p.setFont(font_name, 24)
     p.drawString(20 * mm, height - 28 * mm, "ICEE 2026")
     p.setFont(font_name, 12)
-    p.drawString(20 * mm, height - 36 * mm, "ЭЛЕКТРОННЫЙ БИЛЕТ")
+    p.drawString(20 * mm, height - 36 * mm, _("ЭЛЕКТРОННЫЙ БИЛЕТ"))
 
     p.setFillColorRGB(0.12, 0.16, 0.23)
     p.setFont(font_name, 16)
-    p.drawString(20 * mm, height - 70 * mm, "Посетитель:")
+    p.drawString(20 * mm, height - 70 * mm, _("Посетитель:"))
     p.setFont(font_name, 20)
     full_name = f"{visitor.last_name} {visitor.first_name} {visitor.middle_name or ''}".strip()
     p.drawString(20 * mm, height - 82 * mm, full_name)
@@ -176,24 +176,24 @@ def _draw_visitor_pdf(request, response, visitor, token):
     p.drawImage(qr_reader, width - 72 * mm, height - 136 * mm, 50 * mm, 50 * mm, mask="auto")
 
     p.setFont(font_name, 12)
-    p.drawString(20 * mm, height - 100 * mm, f"Компания: {visitor.company}")
-    p.drawString(20 * mm, height - 108 * mm, f"Email: {visitor.email}")
+    p.drawString(20 * mm, height - 100 * mm, f"{_('Компания')}: {visitor.company}")
+    p.drawString(20 * mm, height - 108 * mm, f"{_('Email')}: {visitor.email}")
     local_created_at = timezone.localtime(visitor.created_at)
-    p.drawString(20 * mm, height - 116 * mm, f"Дата регистрации: {local_created_at.strftime('%d.%m.%Y %H:%M')}")
+    p.drawString(20 * mm, height - 116 * mm, f"{_('Дата регистрации')}: {local_created_at.strftime('%d.%m.%Y %H:%M')}")
 
     p.setFont(font_name, 13)
-    p.drawString(20 * mm, height - 136 * mm, "Дата и время проведения:")
+    p.drawString(20 * mm, height - 136 * mm, _("Дата и время проведения:"))
     p.setFont(font_name, 12)
-    p.drawString(20 * mm, height - 145 * mm, "14-15 апреля: 10:00-18:00")
-    p.drawString(20 * mm, height - 152 * mm, "16 апреля: 10:00-16:00")
-    p.drawString(20 * mm, height - 163 * mm, "Адрес: г. Бишкек, ул. Ахунбаева, 97, Манеж КГАФКиС")
+    p.drawString(20 * mm, height - 145 * mm, _("14-15 апреля: 10:00-18:00"))
+    p.drawString(20 * mm, height - 152 * mm, _("16 апреля: 10:00-16:00"))
+    p.drawString(20 * mm, height - 163 * mm, _("Адрес: г. Бишкек, ул. Ахунбаева, 97, Манеж КГАФКиС"))
 
     p.setStrokeColorRGB(0.75, 0.8, 0.9)
     p.line(20 * mm, height - 176 * mm, width - 20 * mm, height - 176 * mm)
     p.setFont(font_name, 10)
     p.setFillColorRGB(0.3, 0.35, 0.42)
-    p.drawString(20 * mm, height - 184 * mm, "Для входа предъявите билет в распечатанном или электронном виде.")
-    p.drawString(20 * mm, height - 191 * mm, "Контакты: +996 775 000 005, info@icee.kg")
+    p.drawString(20 * mm, height - 184 * mm, _("Для входа предъявите билет в распечатанном или электронном виде."))
+    p.drawString(20 * mm, height - 191 * mm, _("Контакты: +996 775 000 005, info@icee.kg"))
 
     p.showPage()
     p.save()
@@ -333,11 +333,11 @@ def _draw_submission_pdf(request, response, submission, token):
 
     if submission.applicant_email:
         y -= 10 * mm
-        y = draw_block("Email", submission.applicant_email, y, label_size=12, value_size=13, gap=7 * mm)
+        y = draw_block(_("Email"), submission.applicant_email, y, label_size=12, value_size=13, gap=7 * mm)
 
     local_created_at = timezone.localtime(submission.created_at)
     y = draw_block(
-        "Дата регистрации",
+        _("Дата регистрации"),
         local_created_at.strftime("%d.%m.%Y %H:%M"),
         y,
         label_size=12,
@@ -347,7 +347,7 @@ def _draw_submission_pdf(request, response, submission, token):
 
     # ---------- Event block BELOW ----------
     y = draw_block(
-        "Код",
+        _("Код"),
         submission_ticket_code(submission.id),
         y,
         label_size=12,
@@ -358,7 +358,7 @@ def _draw_submission_pdf(request, response, submission, token):
 
     if c.event_dates:
         event_block_y = draw_block(
-            "Даты проведения",
+            _("Даты проведения:"),
             c.event_dates,
             event_block_y,
             label_size=12,
@@ -368,7 +368,7 @@ def _draw_submission_pdf(request, response, submission, token):
 
     if c.event_schedule:
         event_block_y = draw_block(
-            "Время работы",
+            _("Время работы:"),
             c.event_schedule,
             event_block_y,
             label_size=12,
@@ -378,7 +378,7 @@ def _draw_submission_pdf(request, response, submission, token):
 
     if c.event_location:
         event_block_y = draw_block(
-            "Место проведения",
+            _("Место проведения:"),
             c.event_location,
             event_block_y,
             label_size=12,

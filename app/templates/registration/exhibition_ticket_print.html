@@ -1,9 +1,9 @@
 {% load i18n %}
 <!doctype html>
-<html lang="ru">
+<html lang="{{ LANGUAGE_CODE|default:'ru' }}">
 <head>
     <meta charset="utf-8">
-    <title>ICEE Ticket Print</title>
+    <title>{% trans "Печать билета ICEE" %}</title>
     <style>
         @page { size: 80.2mm 50mm; margin: 0; }
         html, body {

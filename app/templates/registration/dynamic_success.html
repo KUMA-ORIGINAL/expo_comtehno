@@ -43,8 +43,8 @@
 {% block content %}
 <div class="success-box">
     <h1>{% trans "Спасибо!" %}</h1>
-    {% if campaign.success_message %}
-    <p>{{ campaign.success_message|linebreaksbr }}</p>
+    {% if success_message_to_show %}
+    <p>{{ success_message_to_show|linebreaksbr }}</p>
     {% else %}
     <p>{% trans "Ваша заявка принята. При необходимости мы свяжемся с вами по указанным контактам." %}</p>
     {% endif %}
