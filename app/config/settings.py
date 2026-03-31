@@ -276,7 +276,7 @@ CELERY_TIMEZONE = TIME_ZONE
 
 # False (по умолчанию): письма после регистрации отправляются сразу из веб-процесса (worker не обязателен).
 # True: поставить в очередь Celery (нужен запущенный celery worker).
-REGISTRATION_EMAIL_VIA_CELERY = env.bool("REGISTRATION_EMAIL_VIA_CELERY", default=False)
+REGISTRATION_EMAIL_VIA_CELERY = env.bool("REGISTRATION_EMAIL_VIA_CELERY", default=True)
 
 
 SPECTACULAR_SETTINGS = {
