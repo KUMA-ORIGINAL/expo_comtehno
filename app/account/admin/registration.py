@@ -1,19 +1,18 @@
-import json
 from types import SimpleNamespace
 
 from django.contrib import admin
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.forms.models import BaseInlineFormSet
 from django.http import HttpResponseRedirect
 from django.urls import path, reverse
-from django.utils.html import escape, format_html, format_html_join
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TabbedTranslationAdmin, TranslationStackedInline
 from unfold.admin import StackedInline
 from unfold.contrib.forms.widgets import WysiwygWidget
 
-from account.models import RegistrationCampaign, RegistrationField, RegistrationSubmission
+from account.models import RegistrationCampaign, RegistrationEmailSender, RegistrationField, RegistrationSubmission
 from common.base_admin import BaseModelAdmin
 from common.tasks import queue_registration_submission_emails
 
@@ -116,6 +115,26 @@ class RegistrationFieldInline(StackedInline, TranslationStackedInline):
     fields = ("sort_order", "key", "label", "field_type", "choices_text", "required")
 
 
+@admin.register(RegistrationEmailSender)
+class RegistrationEmailSenderAdmin(BaseModelAdmin):
+    list_display = ("title", "email", "is_active", "created_at")
+    list_filter = ("is_active",)
+    search_fields = ("title", "email")
+    readonly_fields = ("created_at",)
+
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_superuser and super().has_view_permission(request, obj)
+
+    def has_add_permission(self, request):
+        return request.user.is_superuser and super().has_add_permission(request)
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser and super().has_change_permission(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser and super().has_delete_permission(request, obj)
+
+
 @admin.register(RegistrationCampaign)
 class RegistrationCampaignAdmin(BaseModelAdmin, TabbedTranslationAdmin):
     compressed_fields = True
@@ -171,6 +190,11 @@ class RegistrationCampaignAdmin(BaseModelAdmin, TabbedTranslationAdmin):
                 form.base_fields[field_name].help_text = _(
                     "Общий текст перед именем участника (например: Участник)."
                 )
+            if field_name == "sender_address":
+                sender_qs = RegistrationEmailSender.objects.filter(is_active=True)
+                if obj and obj.sender_address_id:
+                    sender_qs = RegistrationEmailSender.objects.filter(Q(is_active=True) | Q(pk=obj.sender_address_id))
+                form.base_fields[field_name].queryset = sender_qs
         for name in (
             "applicant_email_body",
             "staff_email_body",
@@ -291,6 +315,7 @@ class RegistrationCampaignAdmin(BaseModelAdmin, TabbedTranslationAdmin):
             {
                 "fields": (
                     "send_applicant_confirmation",
+                    "sender_address",
                     "applicant_email_subject",
                     "applicant_email_body",
                     "email_template_guide",
@@ -353,7 +378,6 @@ class RegistrationSubmissionAdmin(BaseModelAdmin):
     search_fields = ("applicant_name", "applicant_email")
     readonly_fields = (
         "campaign",
-        "data_display",
         "applicant_email",
         "applicant_name",
         "ticket_token",
@@ -376,7 +400,7 @@ class RegistrationSubmissionAdmin(BaseModelAdmin):
                 )
             },
         ),
-        (_("Данные"), {"fields": ("data_display",)}),
+        (_("Данные"), {"fields": ("data",)}),
     )
 
     def get_urls(self):
@@ -397,19 +421,16 @@ class RegistrationSubmissionAdmin(BaseModelAdmin):
         path = reverse("exhibition_ticket", args=[obj.ticket_token])
         return format_html('<a href="{}" target="_blank" rel="noopener">{}</a>', path, _("Открыть"))
 
-    @admin.display(description=_("Данные формы (JSON)"))
-    def data_display(self, obj):
-        if not obj or not obj.data:
-            return "—"
-        text = json.dumps(obj.data, ensure_ascii=False, indent=2)
-        return mark_safe(f"<pre style='white-space:pre-wrap'>{escape(text)}</pre>")
-
     @admin.display(description=_("Отправка письма"))
     def resend_email_button(self, obj):
         if not obj or not obj.pk:
             return "—"
         url = reverse("admin:account_registrationsubmission_resend_email", args=[obj.pk])
         return format_html('<a class="button" href="{}">{}</a>', url, _("Отправить снова"))
+
+    def save_model(self, request, obj, form, change):
+        obj.apply_applicant_snapshot()
+        super().save_model(request, obj, form, change)
 
     def resend_email_view(self, request, object_id):
         obj = self.get_object(request, object_id)

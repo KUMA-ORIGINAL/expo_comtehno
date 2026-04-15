@@ -126,10 +126,16 @@ def _parse_recipient_list(raw: str) -> list[str]:
     return out
 
 
+def _campaign_from_email(campaign) -> str:
+    if campaign.sender_address_id and campaign.sender_address:
+        return campaign.sender_address.email
+    return (campaign.sender_email or "").strip() or settings.DEFAULT_FROM_EMAIL
+
+
 def deliver_registration_submission_emails(submission_id: int) -> None:
     """Синхронная отправка писем по заявке (заявитель + организаторы)."""
     try:
-        submission = RegistrationSubmission.objects.select_related("campaign").get(pk=submission_id)
+        submission = RegistrationSubmission.objects.select_related("campaign", "campaign__sender_address").get(pk=submission_id)
     except RegistrationSubmission.DoesNotExist:
         logger.warning("deliver_registration_submission_emails: submission %s not found", submission_id)
         return
@@ -138,6 +144,7 @@ def deliver_registration_submission_emails(submission_id: int) -> None:
     lang = (submission.language_code or "ru").split("-", 1)[0]
 
     with override(lang):
+        from_email = _campaign_from_email(campaign)
         display_data = _humanize_submission_data(submission)
         ticket_tok = ensure_submission_ticket_token(submission)
         base = (settings.SITE_URL or "").rstrip("/")
@@ -176,7 +183,7 @@ def deliver_registration_submission_emails(submission_id: int) -> None:
                     msg = EmailMultiAlternatives(
                         subject=subject,
                         body=plain_body,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        from_email=from_email,
                         to=[to],
                     )
                     msg.attach_alternative(html_body, "text/html")
@@ -220,7 +227,7 @@ def deliver_registration_submission_emails(submission_id: int) -> None:
                     msg = EmailMultiAlternatives(
                         subject=subject,
                         body=staff_body,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        from_email=from_email,
                         to=recipients,
                     )
                     msg.attach_alternative(html_staff, "text/html")

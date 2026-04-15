@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
+from django.core import mail
 from django.core.exceptions import ValidationError
 from django.test import RequestFactory, TestCase
 from django.test.utils import override_settings
@@ -10,9 +11,16 @@ from django.urls import reverse
 from django.utils.translation import override
 
 from account.admin.registration import RegistrationCampaignAdmin, RegistrationSubmissionAdmin
-from account.models import ExhibitionVisitor, RegistrationCampaign, RegistrationField, RegistrationSubmission
+from account.models import (
+    ExhibitionVisitor,
+    RegistrationCampaign,
+    RegistrationEmailSender,
+    RegistrationField,
+    RegistrationSubmission,
+)
 from account.registration_forms import build_dynamic_registration_form_class
 from account.ticket_utils import ensure_submission_ticket_token, submission_ticket_code, visitor_ticket_code
+from common.tasks import deliver_registration_submission_emails
 
 
 _PHONE_COUNTER = count(1)
@@ -306,6 +314,66 @@ class RegistrationConfigurationTests(TestCase):
         response = self.client.get(reverse("registration_form", kwargs={"slug": campaign.slug}))
         self.assertEqual(response.status_code, 503)
         self.assertContains(response, "временно недоступна", status_code=503)
+
+
+@override_settings(
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    DEFAULT_FROM_EMAIL="default@example.com",
+    SITE_URL="https://example.test",
+)
+class RegistrationEmailSenderTests(TestCase):
+    def setUp(self):
+        self.owner = create_test_user("owner-email@example.com", is_staff=True)
+
+    def _make_submission(self, sender_address=None):
+        campaign = RegistrationCampaign.objects.create(
+            owner=self.owner,
+            slug=f"email-campaign-{sender_address.id if sender_address else 'default'}",
+            title="Email campaign",
+            applicant_email_field_key="contact_email",
+            applicant_name_field_keys="full_name",
+            send_applicant_confirmation=True,
+            notify_staff=False,
+            sender_address=sender_address,
+            is_active=True,
+        )
+        RegistrationField.objects.create(
+            campaign=campaign,
+            key="full_name",
+            label="Full name",
+            field_type=RegistrationField.TYPE_TEXT,
+            required=True,
+            sort_order=1,
+        )
+        RegistrationField.objects.create(
+            campaign=campaign,
+            key="contact_email",
+            label="Email",
+            field_type=RegistrationField.TYPE_EMAIL,
+            required=True,
+            sort_order=2,
+        )
+        return RegistrationSubmission.objects.create(
+            campaign=campaign,
+            data={"full_name": "Jane Doe", "contact_email": "jane@example.com"},
+            applicant_name="Jane Doe",
+            applicant_email="jane@example.com",
+        )
+
+    def test_uses_campaign_sender_email_when_set(self):
+        sender = RegistrationEmailSender.objects.create(title="Forms", email="forms@example.com")
+        submission = self._make_submission(sender_address=sender)
+
+        deliver_registration_submission_emails(submission.id)
+
+        self.assertEqual(mail.outbox[0].from_email, "forms@example.com")
+
+    def test_falls_back_to_default_from_email_when_sender_empty(self):
+        submission = self._make_submission()
+
+        deliver_registration_submission_emails(submission.id)
+
+        self.assertEqual(mail.outbox[0].from_email, "default@example.com")
 
 
 class TicketCheckinTests(TestCase):

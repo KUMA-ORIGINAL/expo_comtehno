@@ -480,6 +480,10 @@ def unfold_can_view_users(request):
     return unfold_is_superuser(request)
 
 
+def unfold_can_view_email_senders(request):
+    return unfold_is_superuser(request)
+
+
 def unfold_can_view_visitors(request):
     return bool(request.user and request.user.is_staff and request.user.has_perm("account.view_exhibitionvisitor"))
 
@@ -513,6 +517,7 @@ def unfold_has_system_workspace(request):
         check(request)
         for check in (
             unfold_can_view_users,
+            unfold_can_view_email_senders,
             unfold_can_view_campaigns,
         )
     )
@@ -620,6 +625,12 @@ UNFOLD = {
                         "icon": "group",
                         "link": reverse_lazy("admin:auth_group_changelist"),
                         "permission": unfold_can_view_users,
+                    },
+                    {
+                        "title": _("Email отправителей"),
+                        "icon": "alternate_email",
+                        "link": reverse_lazy("admin:account_registrationemailsender_changelist"),
+                        "permission": unfold_can_view_email_senders,
                     },
                     {
                         "title": _("API схема"),

@@ -25,6 +25,21 @@ def parse_field_choices(text: str) -> list[tuple[str, str]]:
 FIELD_KEY_RE = re.compile(r"^[a-z0-9_]+$")
 
 
+class RegistrationEmailSender(models.Model):
+    title = models.CharField(_("Название"), max_length=255)
+    email = models.EmailField(_("Email отправителя"), unique=True)
+    is_active = models.BooleanField(_("Активен"), default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Email отправителя")
+        verbose_name_plural = _("Email отправителей")
+        ordering = ["title", "email"]
+
+    def __str__(self):
+        return f"{self.title} <{self.email}>"
+
+
 class RegistrationCampaign(models.Model):
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -65,6 +80,20 @@ class RegistrationCampaign(models.Model):
     )
 
     send_applicant_confirmation = models.BooleanField(_("Отправить письмо заявителю"), default=True)
+    sender_email = models.EmailField(
+        _("Email отправителя"),
+        blank=True,
+        help_text=_("Если пусто, используется DEFAULT_FROM_EMAIL из настроек проекта."),
+    )
+    sender_address = models.ForeignKey(
+        RegistrationEmailSender,
+        on_delete=models.SET_NULL,
+        related_name="campaigns",
+        verbose_name=_("Email отправителя"),
+        blank=True,
+        null=True,
+        help_text=_("Если не выбран, используется DEFAULT_FROM_EMAIL из настроек проекта."),
+    )
     applicant_email_subject = models.CharField(_("Тема письма заявителю"), max_length=255, blank=True)
     applicant_email_body = models.TextField(
         _("Текст письма заявителю (plain text)"),

@@ -164,7 +164,7 @@ def _draw_visitor_pdf(request, response, visitor, token):
     p.setFont(font_name, 12)
     p.drawString(20 * mm, height - 36 * mm, _("ЭЛЕКТРОННЫЙ БИЛЕТ"))
 
-    p.setFillColorRGB(0.12, 0.16, 0.23)
+    p.setFillColorRGB(0.12, 0.16, 0.23) 
     p.setFont(font_name, 16)
     p.drawString(20 * mm, height - 70 * mm, _("Посетитель:"))
     p.setFont(font_name, 20)
@@ -307,11 +307,12 @@ def _draw_submission_pdf(request, response, submission, token):
         if not value:
             return y_pos
 
-        p.setFillColor(MUTED)
-        p.setFont(font_name, label_size)
-        for line in _wrap_reportlab_text(p, label, left_w, font_name, label_size):
-            p.drawString(content_x, y_pos, line)
-            y_pos -= 5.2 * mm
+        if label:
+            p.setFillColor(MUTED)
+            p.setFont(font_name, label_size)
+            for line in _wrap_reportlab_text(p, label, left_w, font_name, label_size):
+                p.drawString(content_x, y_pos, line)
+                y_pos -= 5.2 * mm
 
         p.setFillColor(TEXT)
         p.setFont(font_name, value_size)
@@ -327,22 +328,23 @@ def _draw_submission_pdf(request, response, submission, token):
 
     # ВОТ ЭТОТ КОД НИКУДА НЕ ДЕЛСЯ — оставляем дополнительные поля
     for label, value in _submission_ticket_rows(submission, target="pdf"):
-        y = draw_block(label, value, y, label_size=12, value_size=13, gap=6 * mm)
+        y = draw_block("", value, y, label_size=12, value_size=14, gap=8 * mm)
         if y < card_y + 90 * mm:
             break
 
+    y = card_y + 132 * mm
+
     if submission.applicant_email:
-        y -= 10 * mm
-        y = draw_block(_("Email"), submission.applicant_email, y, label_size=12, value_size=13, gap=7 * mm)
+        y = draw_block(_("Email"), submission.applicant_email, y, label_size=11, value_size=12, gap=6 * mm)
 
     local_created_at = timezone.localtime(submission.created_at)
     y = draw_block(
         _("Дата регистрации"),
         local_created_at.strftime("%d.%m.%Y %H:%M"),
         y,
-        label_size=12,
-        value_size=13,
-        gap=7 * mm,
+        label_size=11,
+        value_size=12,
+        gap=6 * mm,
     )
 
     # ---------- Event block BELOW ----------
@@ -350,20 +352,20 @@ def _draw_submission_pdf(request, response, submission, token):
         _("Код"),
         submission_ticket_code(submission.id),
         y,
-        label_size=12,
-        value_size=13,
-        gap=10 * mm,
+        label_size=11,
+        value_size=12,
+        gap=8 * mm,
     )
-    event_block_y = y - 10 * mm
+    event_block_y = y - 8 * mm
 
     if c.event_dates:
         event_block_y = draw_block(
             _("Даты проведения:"),
             c.event_dates,
             event_block_y,
-            label_size=12,
-            value_size=14,
-            gap=9 * mm,
+            label_size=11,
+            value_size=12,
+            gap=7 * mm,
         )
 
     if c.event_schedule:
@@ -371,9 +373,9 @@ def _draw_submission_pdf(request, response, submission, token):
             _("Время работы:"),
             c.event_schedule,
             event_block_y,
-            label_size=12,
-            value_size=14,
-            gap=9 * mm,
+            label_size=11,
+            value_size=12,
+            gap=7 * mm,
         )
 
     if c.event_location:
@@ -381,9 +383,9 @@ def _draw_submission_pdf(request, response, submission, token):
             _("Место проведения:"),
             c.event_location,
             event_block_y,
-            label_size=12,
-            value_size=14,
-            gap=9 * mm,
+            label_size=11,
+            value_size=12,
+            gap=7 * mm,
         )
 
     # ---------- Footer (HTML, with top divider only) ----------
