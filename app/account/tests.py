@@ -12,14 +12,13 @@ from django.utils.translation import override
 
 from account.admin.registration import RegistrationCampaignAdmin, RegistrationSubmissionAdmin
 from account.models import (
-    ExhibitionVisitor,
     RegistrationCampaign,
     RegistrationEmailSender,
     RegistrationField,
     RegistrationSubmission,
 )
 from account.registration_forms import build_dynamic_registration_form_class
-from account.ticket_utils import ensure_submission_ticket_token, submission_ticket_code, visitor_ticket_code
+from account.ticket_utils import ensure_submission_ticket_token, submission_ticket_code
 from common.tasks import deliver_registration_submission_emails
 
 
@@ -414,22 +413,6 @@ class TicketCheckinTests(TestCase):
             applicant_name="Jane Doe",
             applicant_email="jane@example.com",
         )
-        self.visitor = ExhibitionVisitor.objects.create(
-            email="visitor@example.com",
-            last_name="Visitor",
-            first_name="Legacy",
-            middle_name="Flow",
-            phone_number="+996700000001",
-            city="Bishkek",
-            company="ICEE",
-            exhibition_theme="construction",
-            industry="construction",
-            position="manager",
-            visit_purposes=["info"],
-            source="internet",
-            personal_data_consent=True,
-        )
-
     def test_staff_can_resolve_submission_ticket_code(self):
         response = self.client.post(
             reverse("exhibition_checkin"),
@@ -437,13 +420,3 @@ class TicketCheckinTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["submission"].id, self.submission.id)
-        self.assertIsNone(response.context["visitor"])
-
-    def test_staff_can_resolve_visitor_ticket_code(self):
-        response = self.client.post(
-            reverse("exhibition_checkin"),
-            data={"ticket_code": visitor_ticket_code(self.visitor.id)},
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context["visitor"].id, self.visitor.id)
-        self.assertIsNone(response.context["submission"])

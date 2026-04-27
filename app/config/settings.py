@@ -484,10 +484,6 @@ def unfold_can_view_email_senders(request):
     return unfold_is_superuser(request)
 
 
-def unfold_can_view_visitors(request):
-    return bool(request.user and request.user.is_staff and request.user.has_perm("account.view_exhibitionvisitor"))
-
-
 def unfold_can_view_campaigns(request):
     return bool(request.user and request.user.is_staff and request.user.has_perm("account.view_registrationcampaign"))
 
@@ -504,7 +500,6 @@ def unfold_has_registration_workspace(request):
     return any(
         check(request)
         for check in (
-            unfold_can_view_visitors,
             unfold_can_view_campaigns,
             unfold_can_view_submissions,
             unfold_can_use_checkin,

@@ -394,6 +394,9 @@ msgstr "Ticket page"
 msgid "Заявка получена"
 msgstr "Application received"
 
+msgid "Заявка на участие получена"
+msgstr "Participation application received"
+
 msgid "Новая заявка: {title}"
 msgstr "New application: {title}"
 
@@ -402,3 +405,42 @@ msgstr "Thank you, your application has been received. We will contact you if ne
 
 msgid "Билет (PDF): {url}"
 msgstr "Ticket (PDF): {url}"
+
+msgid "Код: {code}"
+msgstr "Code: {code}"
+
+msgid "Электронный билет"
+msgstr "Electronic ticket"
+
+msgid "Сканируйте при входе"
+msgstr "Scan at the entrance"
+
+msgid "Мероприятие:"
+msgstr "Event:"
+
+msgid "Код билета:"
+msgstr "Ticket code:"
+
+msgid "Скачать PDF билет"
+msgstr "Download PDF ticket"
+
+msgid "Печать для XPrinter"
+msgstr "Print for XPrinter"
+
+msgid "Печать билета"
+msgstr "Print ticket"
+
+msgid "Сканировать"
+msgstr "Scan"
+
+msgid "ЭЛЕКТРОННЫЙ БИЛЕТ / ПОДТВЕРЖДЕНИЕ"
+msgstr "ELECTRONIC TICKET / CONFIRMATION"
+
+msgid "Предъявите билет при регистрации на мероприятии."
+msgstr "Show your ticket at event registration."
+
+msgid "Пустой код билета."
+msgstr "Ticket code is empty."
+
+msgid "Участник"
+msgstr "Participant"

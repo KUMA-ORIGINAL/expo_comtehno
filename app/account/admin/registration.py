@@ -1,7 +1,9 @@
 from types import SimpleNamespace
 
+from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.db.models import Q
 from django.forms.models import BaseInlineFormSet
 from django.http import HttpResponseRedirect
@@ -79,6 +81,9 @@ class RegistrationFieldInlineFormSet(BaseInlineFormSet):
             "staff_notification_emails",
             campaign.staff_notification_emails,
         )
+        campaign.staff_notification_emails = campaign.normalize_staff_notification_emails(
+            campaign.staff_notification_emails
+        )
         campaign.send_applicant_confirmation = self._bool_from_data(
             "send_applicant_confirmation",
             campaign.send_applicant_confirmation,
@@ -137,6 +142,11 @@ class RegistrationEmailSenderAdmin(BaseModelAdmin):
 
 @admin.register(RegistrationCampaign)
 class RegistrationCampaignAdmin(BaseModelAdmin, TabbedTranslationAdmin):
+    formfield_overrides = {
+        models.TextField: {
+            "widget": WysiwygWidget,
+        }
+    }
     compressed_fields = True
     list_display = ("title", "slug", "owner", "is_active", "sort_order", "public_form_url", "created_at")
     list_filter = ("is_active",)
@@ -146,6 +156,8 @@ class RegistrationCampaignAdmin(BaseModelAdmin, TabbedTranslationAdmin):
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         for field_name in form.base_fields:
+            if field_name == "staff_notification_emails":
+                form.base_fields[field_name].widget = forms.Textarea(attrs={"rows": 4, "cols": 80})
             if (
                 field_name == "participation_terms"
                 or field_name.startswith("participation_terms_")
@@ -155,41 +167,6 @@ class RegistrationCampaignAdmin(BaseModelAdmin, TabbedTranslationAdmin):
                 or field_name.startswith("ticket_footer_note_")
             ):  
                 form.base_fields[field_name].widget = WysiwygWidget()
-            if field_name == "ticket_footer_note" or field_name.startswith("ticket_footer_note_"):
-                form.base_fields[field_name].label = _("Текст снизу")
-                form.base_fields[field_name].help_text = _(
-                    "Отображается на странице билета и в печатной версии с форматированием (как в редакторе)."
-                )
-            if field_name == "ticket_heading":
-                form.base_fields[field_name].label = _("Заголовок электронного билета")
-                form.base_fields[field_name].help_text = _(
-                    "Заголовок в верхней части билета (например: ЭЛЕКТРОННЫЙ БИЛЕТ / ПОДТВЕРЖДЕНИЕ)."
-                )
-            if field_name == "ticket_subtitle":
-                form.base_fields[field_name].label = _("Подзаголовок электронного билета")
-                form.base_fields[field_name].help_text = _(
-                    "Текст под заголовком электронного билета."
-                )
-            if field_name == "ticket_pdf_field_keys":
-                form.base_fields[field_name].label = _("Доп. поля электронного билета")
-                form.base_fields[field_name].help_text = _(
-                    "Ключи полей формы через запятую, которые нужно показать в электронном билете и PDF."
-                )
-            if field_name == "ticket_print_heading":
-                form.base_fields[field_name].label = _("Заголовок печатного билета")
-                form.base_fields[field_name].help_text = _(
-                    "Отдельный заголовок для страницы печати."
-                )
-            if field_name == "ticket_print_field_keys":
-                form.base_fields[field_name].label = _("Доп. поля печатного билета")
-                form.base_fields[field_name].help_text = _(
-                    "Ключи полей формы через запятую, которые нужно показать только в печати."
-                )
-            if field_name == "ticket_participant_label":
-                form.base_fields[field_name].label = _("Подпись перед ФИО участника")
-                form.base_fields[field_name].help_text = _(
-                    "Общий текст перед именем участника (например: Участник)."
-                )
             if field_name == "sender_address":
                 sender_qs = RegistrationEmailSender.objects.filter(is_active=True)
                 if obj and obj.sender_address_id:
@@ -397,6 +374,7 @@ class RegistrationSubmissionAdmin(BaseModelAdmin):
                     "ticket_link",
                     "resend_email_button",
                     "ticket_token",
+                    'language_code'
                 )
             },
         ),

@@ -1,6 +1,7 @@
 import base64
 import io
 import os
+
 import qrcode
 from django.conf import settings
 from django.core import signing
@@ -8,16 +9,12 @@ from django.core.signing import BadSignature, SignatureExpired
 from django.http import Http404
 from django.utils.translation import gettext_lazy as _
 
-VISITOR_TICKET_SALT = "icee-ticket"
 SUBMISSION_TICKET_SALT = "reg-submission-ticket"
 
 try:
-    from reportlab.lib.pagesizes import A4
-    from reportlab.lib.units import mm
     from reportlab.lib.utils import ImageReader
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
-    from reportlab.pdfgen import canvas
 
     REPORTLAB_AVAILABLE = True
 except ModuleNotFoundError:
@@ -65,21 +62,8 @@ def get_pdf_font_name():
     return "Helvetica"
 
 
-def build_visitor_ticket_token(visitor_id: int) -> str:
-    return signing.dumps({"visitor_id": visitor_id}, salt=VISITOR_TICKET_SALT)
-
-
 def build_submission_ticket_token(submission_id: int) -> str:
     return signing.dumps({"submission_id": submission_id}, salt=SUBMISSION_TICKET_SALT)
-
-
-def ensure_visitor_ticket_token(visitor) -> str:
-    if visitor.ticket_token:
-        return visitor.ticket_token
-    token = build_visitor_ticket_token(visitor.id)
-    visitor.ticket_token = token
-    visitor.save(update_fields=["ticket_token"])
-    return token
 
 
 def ensure_submission_ticket_token(submission) -> str:
@@ -89,28 +73,6 @@ def ensure_submission_ticket_token(submission) -> str:
     submission.ticket_token = token
     submission.save(update_fields=["ticket_token"])
     return token
-
-
-def get_visitor_by_ticket_token(token: str):
-    from account.models.exhibition_visitor import ExhibitionVisitor
-
-    try:
-        payload = signing.loads(token, salt=VISITOR_TICKET_SALT)
-        visitor_id = payload.get("visitor_id")
-    except (BadSignature, SignatureExpired, ValueError, TypeError):
-        raise Http404(_("Билет недействителен или срок ссылки истек."))
-    if not visitor_id:
-        raise Http404(_("Билет не найден."))
-    try:
-        visitor = ExhibitionVisitor.objects.get(id=visitor_id)
-        if visitor.ticket_token and visitor.ticket_token != token:
-            raise Http404(_("Билет недействителен."))
-        if not visitor.ticket_token:
-            visitor.ticket_token = token
-            visitor.save(update_fields=["ticket_token"])
-        return visitor
-    except ExhibitionVisitor.DoesNotExist:
-        raise Http404(_("Билет не найден."))
 
 
 def get_submission_by_ticket_token(token: str):
@@ -136,18 +98,7 @@ def get_submission_by_ticket_token(token: str):
 
 
 def try_resolve_ticket_token(token: str):
-    """Возвращает ('visitor', visitor) или ('submission', submission)."""
-    try:
-        submission = get_submission_by_ticket_token(token)
-        return "submission", submission
-    except Http404:
-        pass
-    visitor = get_visitor_by_ticket_token(token)
-    return "visitor", visitor
-
-
-def visitor_ticket_code(visitor_id: int) -> str:
-    return f"ICEE-{int(visitor_id):06d}"
+    return "submission", get_submission_by_ticket_token(token)
 
 
 def submission_ticket_code(submission_id: int) -> str:

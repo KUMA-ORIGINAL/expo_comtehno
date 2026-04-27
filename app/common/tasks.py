@@ -11,7 +11,7 @@ from django.utils.html import escape, strip_tags
 from django.utils.translation import gettext as _
 from django.utils.translation import override
 
-from account.models import RegistrationField, RegistrationSubmission, parse_field_choices
+from account.models import RegistrationCampaign, RegistrationField, RegistrationSubmission, parse_field_choices
 from account.ticket_utils import ensure_submission_ticket_token, submission_ticket_code
 
 logger = logging.getLogger(__name__)
@@ -115,7 +115,7 @@ def _field_rows_for_email(submission: RegistrationSubmission) -> list[dict]:
 
 def _parse_recipient_list(raw: str) -> list[str]:
     out = []
-    for line in (raw or "").splitlines():
+    for line in RegistrationCampaign.normalize_staff_notification_emails(raw).splitlines():
         addr = line.strip()
         if not addr:
             continue
@@ -160,7 +160,7 @@ def deliver_registration_submission_emails(submission_id: int) -> None:
             to = (submission.applicant_email or "").strip()
             if to:
                 default_subj = _("Заявка получена")
-                subject_tpl = (campaign.applicant_email_subject or "").strip() or default_subj
+                subject_tpl = _((campaign.applicant_email_subject or "").strip()) or default_subj
                 subject = _format_placeholders(subject_tpl, mail_ctx).strip() or default_subj
                 body = _format_placeholders(campaign.applicant_email_body, mail_ctx)
                 if not body.strip():
@@ -196,7 +196,7 @@ def deliver_registration_submission_emails(submission_id: int) -> None:
             recipients = _parse_recipient_list(campaign.staff_notification_emails)
             if recipients:
                 default_staff_subj = _("Новая заявка: {title}").format(title=campaign.title)
-                subject_tpl = (campaign.staff_email_subject or "").strip() or default_staff_subj
+                subject_tpl = _((campaign.staff_email_subject or "").strip()) or default_staff_subj
                 subject = _format_placeholders(subject_tpl, mail_ctx).strip() or default_staff_subj
                 staff_tpl = (campaign.staff_email_body or "").strip()
                 staff_use_table = not bool(staff_tpl)
@@ -205,10 +205,10 @@ def deliver_registration_submission_emails(submission_id: int) -> None:
                 else:
                     staff_body = (
                         mail_ctx["all_fields"]
-                        + _("\n\nБилет (PDF): {url}\nКод: {code}").format(
-                            url=mail_ctx["ticket_pdf_url"],
-                            code=mail_ctx["ticket_code"],
-                        )
+                        + "\n\n"
+                        + _("Билет (PDF): {url}").format(url=mail_ctx["ticket_pdf_url"])
+                        + "\n"
+                        + _("Код: {code}").format(code=mail_ctx["ticket_code"])
                     )
                 try:
                     html_staff = render_to_string(

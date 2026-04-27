@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db import models
+from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
 
 
@@ -154,48 +155,52 @@ class RegistrationCampaign(models.Model):
         help_text=_("Например: +996 775 000 005 · info@icee.kg"),
     )
     ticket_heading = models.CharField(
-        _("Заголовок подтверждения / билета"),
+        _("Заголовок электронного билета"),
         max_length=255,
         blank=True,
         default="",
+        help_text=_("Заголовок в верхней части билета (например: ЭЛЕКТРОННЫЙ БИЛЕТ / ПОДТВЕРЖДЕНИЕ)."),
     )
     ticket_subtitle = models.CharField(
         _("Подзаголовок электронного билета"),
         max_length=255,
         blank=True,
         default="",
+        help_text=_("Текст под заголовком электронного билета."),
     )
     ticket_print_heading = models.CharField(
         _("Заголовок печатного билета"),
         max_length=255,
         blank=True,
         default="",
+        help_text=_("Отдельный заголовок для страницы печати."),
     )
     ticket_participant_label = models.CharField(
         _("Подпись перед ФИО участника"),
         max_length=255,
         blank=True,
         default="",
+        help_text=_("Общий текст перед именем участника (например: Участник)."),
     )
     ticket_footer_note = models.TextField(
-        _("Текст внизу билета"),
+        _("Текст снизу"),
         blank=True,
-        help_text=_("Короткая памятка, которая выводится внизу страницы/билета."),
+        help_text=_("Отображается на странице билета и в печатной версии с форматированием (как в редакторе)."),
     )
 
     ticket_pdf_field_keys = models.CharField(
-        _("Ключи полей для PDF-билета"),
+        _("Доп. поля электронного билета"),
         max_length=500,
         blank=True,
         default="",
-        help_text=_("Через запятую: например first_name,last_name,company."),
+        help_text=_("Ключи полей формы через запятую, которые нужно показать в электронном билете и PDF."),
     )
     ticket_print_field_keys = models.CharField(
-        _("Ключи полей для печатного билета"),
+        _("Доп. поля печатного билета"),
         max_length=500,
         blank=True,
         default="",
-        help_text=_("Через запятую: например first_name,last_name,company."),
+        help_text=_("Ключи полей формы через запятую, которые нужно показать только в печати."),
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -212,11 +217,21 @@ class RegistrationCampaign(models.Model):
     def applicant_name_keys_list(self) -> list[str]:
         return [k.strip() for k in (self.applicant_name_field_keys or "").split(",") if k.strip()]
 
+    @staticmethod
+    def normalize_staff_notification_emails(value: str) -> str:
+        value = value or ""
+        value = re.sub(r"(?i)</?(div|p)[^>]*>", "\n", value)
+        value = re.sub(r"(?i)<br\s*/?>", "\n", value)
+        value = strip_tags(value)
+        lines = [line.strip() for line in value.splitlines() if line.strip()]
+        return "\n".join(lines)
+
     def validate_configuration(self, field_defs=None):
         errors = {}
 
         invalid_recipients = []
-        for line in (self.staff_notification_emails or "").splitlines():
+        staff_notification_emails = self.normalize_staff_notification_emails(self.staff_notification_emails)
+        for line in staff_notification_emails.splitlines():
             raw = line.strip()
             if not raw:
                 continue
@@ -298,6 +313,7 @@ class RegistrationCampaign(models.Model):
 
     def clean(self):
         super().clean()
+        self.staff_notification_emails = self.normalize_staff_notification_emails(self.staff_notification_emails)
         self.validate_configuration()
 
 

@@ -18,6 +18,10 @@ class RegistrationCampaignTranslationOptions(TranslationOptions):
         "event_schedule",
         "event_location",
         "event_contact",
+        "ticket_heading",
+        "ticket_subtitle",
+        "ticket_print_heading",
+        "ticket_participant_label",
         "ticket_footer_note",
     )
 
