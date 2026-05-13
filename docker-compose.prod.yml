@@ -26,7 +26,7 @@ services:
       dockerfile: Dockerfile
     container_name: node_app
     env_file:
-      - .env.prod
+      - ../hackathon_platform/.env
     restart: always
     expose:
       - "4000"
