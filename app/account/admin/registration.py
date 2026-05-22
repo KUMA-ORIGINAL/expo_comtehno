@@ -10,11 +10,14 @@ from django.http import HttpResponseRedirect
 from django.urls import path, reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
+from import_export.admin import ExportActionModelAdmin
 from modeltranslation.admin import TabbedTranslationAdmin, TranslationStackedInline
 from unfold.admin import StackedInline
 from unfold.contrib.forms.widgets import WysiwygWidget
+from unfold.contrib.import_export.forms import ExportForm
 
 from account.models import RegistrationCampaign, RegistrationEmailSender, RegistrationField, RegistrationSubmission
+from account.resources import RegistrationSubmissionResource
 from common.base_admin import BaseModelAdmin
 from common.tasks import queue_registration_submission_emails
 
@@ -349,7 +352,9 @@ class RegistrationCampaignAdmin(BaseModelAdmin, TabbedTranslationAdmin):
 
 
 @admin.register(RegistrationSubmission)
-class RegistrationSubmissionAdmin(BaseModelAdmin):
+class RegistrationSubmissionAdmin(BaseModelAdmin, ExportActionModelAdmin):
+    resource_classes = [RegistrationSubmissionResource]
+    export_form_class = ExportForm
     list_display = ("campaign", "applicant_name", "applicant_email", "ticket_link", "resend_email_button", "created_at")
     list_filter = ("campaign",)
     search_fields = ("applicant_name", "applicant_email")
