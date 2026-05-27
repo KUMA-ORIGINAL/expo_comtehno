@@ -68,7 +68,8 @@
         }
         .extra {
             margin-top: 0.7mm;
-            font-size: 7.2pt;
+            font-size: 8pt;
+            font-weight: 500;
             line-height: 1.2;
             color: #222;
             text-align: left;
@@ -90,7 +91,8 @@
         }
         .qr-note {
             margin-top: 0.35mm;
-            font-size: 7pt;
+            font-weight: 500;
+            font-size: 8pt;
             color: #000;
             line-height: 1.1;
             text-transform: uppercase;
@@ -109,7 +111,7 @@
         <div class="head">{{ submission_ticket_ui.print_heading|default:""|truncatechars:32 }}</div>
         <div class="layout">
             <div class="left">
-                <div style="font-size:8pt;color:#222;">{{ submission_ticket_ui.participant_label }}</div>
+                <div style="font-size:8pt;font-weight: 500;color:#222;margin-bottom: 5px;">{{ submission_ticket_ui.participant_label }}</div>
                 <div class="name">{{ submission.applicant_name|default:"-" }}</div>
                 <div class="company">{{ submission.campaign.subtitle|default:""|truncatechars:40 }}</div>
                 {% if ticket_print_rows %}
